@@ -1,0 +1,16 @@
+Package: saltr
+Type: Package
+Title: Simulation And Leaplab Tools in R 
+Version: 0.1.0
+Authors@R: 
+    person("Beltrán", "Pantoja", email = "bpp09644@uga.edu", role = c("aut", "cre"))
+Description: Simulation And Leaplab Tools in R.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Imports:
+    bindata
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3

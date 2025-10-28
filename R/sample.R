@@ -1,0 +1,46 @@
+#' Generate sample of respondents (categorical data)
+#'
+#' @param sample_size How many respondents
+#' @param total_attrs How many attributes are in the sample
+#' @param base_rate Base rate per attribute (or one if it's the same for all)
+#' @param attr_corr Correlation of attributes (or one if it's the same for all)
+#'
+#' @returns A matrix of respondents and attributes.
+#' @export
+#'
+generate_sample <- function(sample_size, total_attrs, base_rate=.5, attr_corr=.5) {
+
+  marginal_prob <- .extend_vector(base_rate, total_attrs)
+
+  num_pairs <- total_attrs * (total_attrs - 1) / 2
+  bin_corr <- .extend_vector(attr_corr, num_pairs)
+
+  R <- matrix(1, total_attrs, total_attrs)
+  R[lower.tri(R)] <- bin_corr
+  R[upper.tri(R)] <- t(R)[upper.tri(R)]
+
+
+  sample <- bindata::rmvbin(
+    sample_size,
+    margprob = marginal_prob,
+    bincorr=R
+    )
+
+  return(sample)
+}
+
+
+.extend_vector <- function(value, size) {
+  if (length(value) == 1) {
+    return(rep(value, size))
+  } else if (length(value) == size) {
+    return(value)
+  } else {
+    stop(paste0(
+      "Value should have length ", size, " or 1, not ", length(value), "."
+      ))
+  }
+}
+
+
+
