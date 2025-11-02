@@ -6,8 +6,7 @@
 
 
 nice_estimations <- function(model) {
-
-  items <- model$item[,3:8]
+  items <- model$item[, 3:8]
 
   dense <- items |>
     dplyr::mutate(
@@ -25,12 +24,13 @@ nice_estimations <- function(model) {
 
   long <- items |>
     dplyr::mutate(
-      attributes = ifelse(partype.attr == "", "intercept", partype.attr)) |>
+      attributes = ifelse(partype.attr == "", "intercept", partype.attr)
+    ) |>
     dplyr::select(itemno, attributes, est) |>
-    tidyr::pivot_wider(names_from = attributes, values_from = est )
+    tidyr::pivot_wider(names_from = attributes, values_from = est)
 
   return(list(
-   dense = dense,
-   long=long
+    dense = dense,
+    long = long
   ))
 }

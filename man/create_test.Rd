@@ -4,25 +4,17 @@
 \alias{create_test}
 \title{Create a matrix of items}
 \usage{
-create_test(..., test_type = "LCDM", num_attrs = NULL)
+create_test(...)
 }
 \arguments{
 \item{...}{integer vectors with the probabilities}
-
-\item{test_type}{to be passed to the item creator (all the same type).}
-
-\item{num_attrs}{Needed to determine the matrix cols.}
 }
 \value{
 a matrix of parameters
 }
 \description{
-Create a matrix of items
-}
-\examples{
-create_test(
-  c(.2, .3, .5),
-  c(.2, .4, .6),
-  test_type="CRUM",
-  num_attrs=2)
+@description
+An utility function that calls the \code{create_item} function and returns a matrix
+padded with NAs that can be used directly with the responses generation.
+It assumes all the items are LCDM.
 }

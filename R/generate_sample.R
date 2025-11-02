@@ -4,12 +4,20 @@
 #' @param total_attrs How many attributes are in the sample
 #' @param base_rate Base rate per attribute (or one if it's the same for all)
 #' @param attr_corr Correlation of attributes (or one if it's the same for all)
+#' @param attributes.names vector of names for the attributes. Defaults to "Attr#"
+#' @param responses.names vector of names for the responses. Defaults to "#"
 #'
 #' @returns A matrix of respondents and attributes.
 #' @export
 #'
-generate_sample <- function(sample_size, total_attrs, base_rate=.5, attr_corr=.5) {
-
+generate_sample <- function(
+  sample_size,
+  total_attrs,
+  base_rate = .5,
+  attr_corr = .5,
+  attributes.names = NULL,
+  responses.names = NULL
+) {
   marginal_prob <- .extend_vector(base_rate, total_attrs)
 
   num_pairs <- total_attrs * (total_attrs - 1) / 2
@@ -23,8 +31,20 @@ generate_sample <- function(sample_size, total_attrs, base_rate=.5, attr_corr=.5
   sample <- bindata::rmvbin(
     sample_size,
     margprob = marginal_prob,
-    bincorr=R
-    )
+    bincorr = R
+  )
+
+
+  # Giving names to the qmatrix rows and columns
+  if (is.null(attributes.names)) {
+    attributes.names <- paste0("Attr", 1:total_attrs)
+  }
+  if (is.null(responses.names)) {
+    responses.names <- 1:sample_size
+  }
+
+  colnames(sample) <- attributes.names
+  rownames(sample) <- responses.names
 
   return(sample)
 }
@@ -38,9 +58,6 @@ generate_sample <- function(sample_size, total_attrs, base_rate=.5, attr_corr=.5
   } else {
     stop(paste0(
       "Value should have length ", size, " or 1, not ", length(value), "."
-      ))
+    ))
   }
 }
-
-
-

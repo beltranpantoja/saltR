@@ -1,0 +1,29 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+<!-- pkgdown::build_site()  -->
+<!-- devtools::build_readme() -->
+
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# saltr <a href="https://beltranpantoja.github.io/saltR/"><img src="man/figures/saltr_logo.png" align="left" height="138" style="height: 138px"/></a>
+
+The goal of saltR, pronounced as the spanish word _saltar_, is to simplify the running of simulations in the context of DCMs.
+
+## Installation
+
+You can install the development version of saltr from [GitHub](https://github.com/beltranpantoja/saltR) with:
+
+``` r
+devtools::install_github("beltranpantoja/saltR")
+```

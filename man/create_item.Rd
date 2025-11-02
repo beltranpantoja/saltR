@@ -4,14 +4,14 @@
 \alias{create_item}
 \title{Create item parameters from probabilities of right response}
 \usage{
-create_item(..., item_type = "LCDM", num_attrs = NULL)
+create_item(..., type = "LCDM", num_attrs = NULL)
 }
 \arguments{
 \item{...}{probabilities of right answer by attribute profile.}
 
-\item{num_attrs}{Number of attributes in the item. Not needed for LCDM.}
+\item{type}{type of item (LCDM, DINA, DINO, RRUM).}
 
-\item{type}{type of item (LCDM, DINA, DINO, CRUM).}
+\item{num_attrs}{Number of attributes in the item. Not needed for LCDM.}
 }
 \value{
 an item parameters in their standard format
@@ -27,6 +27,6 @@ Notice: This function doesn't check for  possible \emph{real} values
 }
 \examples{
 lcdm_item <- create_item(.2, .4, .6, .8)
-ncrum_item <- create_item(.2, .4, .6, item_type="CRUM")
-dino_item <- create_item(.2, .8, item_type="DINO", num_attrs = 2)
+rrum_item <- create_item(.2, .4, .6, type = "RRUM")
+dino_item <- create_item(.2, .8, type = "DINO", num_attrs = 2)
 }

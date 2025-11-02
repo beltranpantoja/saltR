@@ -1,40 +1,50 @@
 #' Create a matrix of items
 #'
+#'  @description
+#'  An utility function that calls the `create_item` function and returns a matrix
+#'  padded with NAs that can be used directly with the responses generation.
+#'  It assumes all the items are LCDM.
+#'
+#'
 #' @param ... integer vectors with the probabilities
-#' @param test_type to be passed to the item creator (all the same type).
-#' @param num_attrs Needed to determine the matrix cols.
 #'
 #' @returns a matrix of parameters
 #' @export
-#'
-#' @examples
-#' create_test(
-#'   c(.2, .3, .5),
-#'   c(.2, .4, .6),
-#'   test_type="CRUM",
-#'   num_attrs=2)
-create_test <- function(..., test_type = "LCDM", num_attrs = NULL) {
+create_test <- function(...) {
   item_probs <- list(...)
-  n_items <- length(item_probs)
-  n_parameters <- 2^num_attrs
 
-  items <- matrix(0, nrow = n_items, ncol = n_parameters)  # pre-fill with 0
-
-  for (i in seq_len(n_items)) {
-    x <- saltr::create_item(
-      item_probs[[i]],
-      item_type = test_type,
-      num_attrs = num_attrs
+  # If the probabilities are already in a matrix we create the items and return
+  if (is.matrix(item_probs[[1]])) {
+    item_params <- apply(
+      item_probs[[1]],
+      1,
+      function(x) create_item(x)
     )
-
-    # pad or truncate to fit into n_parameters
-    len_x <- length(x)
-    if (len_x > n_parameters) {
-      warning(sprintf("Item %d has %d elements, truncating to %d.", i, len_x, n_parameters))
-      x <- x[seq_len(n_parameters)]
-    }
-    items[i, seq_len(len_x)] <- x
+    return(t(item_params))
   }
 
-  items
+  # Else, we convert the probabilities to parameters as a list
+  item_params <- lapply(
+    item_probs,
+    function(x) create_item(x)
+  )
+
+  # We find the one with the most amount of parameters
+  num_parameters <- max(sapply(item_params, length))
+
+  # We pad all values accordingly and simplify them into a matrix
+  t(sapply(item_params, function(x) .pad_with_NA(x, num_parameters)))
+}
+
+
+#' Pad vector with NAs
+#'
+#' @param x vector to right-pad
+#' @param out_len expected total length
+#'
+#' @returns vector x padded with NAs
+#' @noRd
+.pad_with_NA <- function(x, out_len) {
+  pad <- rep(NA, out_len - length(x))
+  return(c(x, pad))
 }
