@@ -1,7 +1,7 @@
 Package: saltr
 Type: Package
 Title: Simulation And Leaplab Tools in R 
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: 
     person("Beltrán", "Pantoja", email = "bpp09644@uga.edu", role = c("aut", "cre"))
 Description: Simulation And Leaplab Tools in R.
