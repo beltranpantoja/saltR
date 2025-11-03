@@ -97,7 +97,7 @@ simulation <- function() {
 ```
 
 We can run it to see it's working as expected:
-```{r}
+```{r, eval=FALSE}
 simulation()
 ```
 
@@ -105,16 +105,14 @@ simulation()
 
 We can now use this function to iterate and save all the results, for example like this:
 
-```{r}
+```{r eval=FALSE}
 reps <- 10
 
 results <- matrix(NA, ncol=2, nrow=reps)
 
-start <- Sys.time()
 for (i in 1:reps) {
   results[i, ] <- simulation()  
 }
-Sys.time() - start
 ```
 
 ## Parallel processing
@@ -122,21 +120,17 @@ Sys.time() - start
 saltr can be used together with the [doFuture](https://cran.r-project.org/web/packages/doFuture/vignettes/doFuture-1-overview.html) package to take advantage of parallel processing through the library `doFuture`with very few changes.
 
 Although, it comes with some overhead so it's benefits don't really show until 
-we do thousands of simulations.
+we do bigger simulations.
 
-```{r}
+```{r eval=FALSE}
 library(doFuture)
 reps <- 10
-
-start <- Sys.time()
 
 results <- foreach(
   rep = 1:reps, .combine = rbind, .options.future = list(seed = TRUE)
   ) %dofuture% {
     simulation()
 }
-
-Sys.time() - start
 ```
 
 
