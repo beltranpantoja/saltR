@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">saltr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -16,8 +16,14 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/Creating%20a%20single%20simulation.html">Creating a single simulation</a></li>
+    <li><a class="dropdown-item" href="../articles/Running%20multiple%20simulations.html">Running multiple simulations</a></li>
+  </ul></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/beltranpantoja/saltR/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul></div>
 
 
@@ -27,7 +33,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Generate sample of respondents (categorical data)</h1>
-
+      <small class="dont-index">Source: <a href="https://github.com/beltranpantoja/saltR/blob/main/R/generate_sample.R" class="external-link"><code>R/generate_sample.R</code></a></small>
       <div class="d-none name"><code>generate_sample.Rd</code></div>
     </div>
 
@@ -37,7 +43,14 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">generate_sample</span><span class="op">(</span><span class="va">sample_size</span>, <span class="va">total_attrs</span>, base_rate <span class="op">=</span> <span class="fl">0.5</span>, attr_corr <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">generate_sample</span><span class="op">(</span></span>
+<span>  <span class="va">sample_size</span>,</span>
+<span>  <span class="va">total_attrs</span>,</span>
+<span>  base_rate <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>  attr_corr <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>  attributes.names <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  responses.names <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -58,6 +71,14 @@
 
 <dt id="arg-attr-corr">attr_corr<a class="anchor" aria-label="anchor" href="#arg-attr-corr"></a></dt>
 <dd><p>Correlation of attributes (or one if it's the same for all)</p></dd>
+
+
+<dt id="arg-attributes-names">attributes.names<a class="anchor" aria-label="anchor" href="#arg-attributes-names"></a></dt>
+<dd><p>vector of names for the attributes. Defaults to "Attr#"</p></dd>
+
+
+<dt id="arg-responses-names">responses.names<a class="anchor" aria-label="anchor" href="#arg-responses-names"></a></dt>
+<dd><p>vector of names for the responses. Defaults to "#"</p></dd>
 
 </dl></div>
     <div class="section level2">
