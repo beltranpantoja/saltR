@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">saltr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,8 +35,9 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="articles/Creating%20a%20single%20simulation.html">Creating a single simulation</a></li>
-    <li><a class="dropdown-item" href="articles/Running%20multiple%20simulations.html">Running multiple simulations</a></li>
+<li><a class="dropdown-item" href="articles/Creating-a-single-simulation.html">Creating a single simulation</a></li>
+    <li><a class="dropdown-item" href="articles/Creating-reproducible-simulations.html">Creating reproducible simulations</a></li>
+    <li><a class="dropdown-item" href="articles/Running-multiple-simulations.html">Running multiple simulations</a></li>
   </ul>
 </li>
       </ul>
@@ -52,19 +53,28 @@
   </div>
 </nav><div class="container template-home">
 <div class="row">
-  <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="saltr-">saltr <a href="https://beltranpantoja.github.io/saltR/"><img src="reference/figures/saltr_logo.png" align="left" height="138" style="height: 138px"></a>
+  <main id="main" class="col-md-9">
+<div class="section level1">
+<div class="page-header"><h1 id="saltr-">saltr <a href="https://beltranpantoja.github.io/saltR/"><img src="reference/figures/saltr_logo.png" align="left" height="120" style="height: 120px"></a>
 <a class="anchor" aria-label="anchor" href="#saltr-"></a>
 </h1></div>
-<p>The goal of saltR, pronounced as the spanish word <em>saltar</em>, is to simplify the running of simulations in the context of DCMs.</p>
+<p>The goal of saltR, pronounced as the spanish word <em>saltar</em>, is to simplify the running of simulations in the context of DCMs by providing utility functions that can make your code more readable and let you jump straight into the simulation design without worrying too much about the implementation.</p>
 <div class="section level2">
-<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+<h2 id="why">Why?<a class="anchor" aria-label="anchor" href="#why"></a>
 </h2>
-<p>You can install the development version of saltr from <a href="https://github.com/beltranpantoja/saltR" class="external-link">GitHub</a> with:</p>
+<p>Normally, psychometric libraries have functions that generate simulations, the downside is that it all happens inside a black box. This library is meant to only provide semantic functions that do one simple thing at a time.</p>
+<p>Another difference with traditional psuchometric libraries is that saltr tries to be more integrated with the tidyverse packages. For example, <code>extract_item</code> takes the model and returns a tibble for easier work in a pipeline.</p>
+</div>
+<div class="section level2">
+<h2 id="get-started">Get Started<a class="anchor" aria-label="anchor" href="#get-started"></a>
+</h2>
+<p>You can install saltr from <a href="https://github.com/beltranpantoja/saltR" class="external-link">GitHub</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"beltranpantoja/saltR"</span><span class="op">)</span></span></code></pre></div>
+<p>And then jump to <a href="vignettes/Creating-a-single-simulation.Rmd">Creating a single simulation</a> tutorial</p>
 </div>
 </div>
+
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
@@ -96,7 +106,12 @@
 </ul>
 </div>
 
-
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/beltranpantoja/saltR/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/beltranpantoja/saltR/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+</ul>
+</div>
 
   </aside>
 </div>
@@ -107,7 +122,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>

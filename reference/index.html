@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">saltr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.2</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -18,8 +18,9 @@
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/Creating%20a%20single%20simulation.html">Creating a single simulation</a></li>
-    <li><a class="dropdown-item" href="../articles/Running%20multiple%20simulations.html">Running multiple simulations</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/Creating-a-single-simulation.html">Creating a single simulation</a></li>
+    <li><a class="dropdown-item" href="../articles/Creating-reproducible-simulations.html">Creating reproducible simulations</a></li>
+    <li><a class="dropdown-item" href="../articles/Running-multiple-simulations.html">Running multiple simulations</a></li>
   </ul></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -36,12 +37,41 @@
     </div>
 
     <div class="section level2">
-      <h2 id="all-functions">All functions<a class="anchor" aria-label="anchor" href="#all-functions"></a></h2>
+      <h2 id="generate">Generate<a class="anchor" aria-label="anchor" href="#generate"></a></h2>
+
+      <div class="section-desc"><p>Functions that randomly generate base elements for a simulation.</p></div>
+
+      <dl></dl></div><div class="section level2">
 
 
 
 
-    </div><div class="section level2">
+      <dl><dt>
+
+          <code><a href="generate_id.html">generate_id()</a></code>
+
+        </dt>
+        <dd>Generate random simulation ids</dd>
+
+        <dt>
+
+          <code><a href="generate_responses.html">generate_responses()</a></code>
+
+        </dt>
+        <dd>Generate responses to a test</dd>
+
+        <dt>
+
+          <code><a href="generate_sample.html">generate_sample()</a></code>
+
+        </dt>
+        <dd>Generate sample of respondents (categorical data)</dd>
+      </dl></div><div class="section level2">
+      <h2 id="create">Create<a class="anchor" aria-label="anchor" href="#create"></a></h2>
+
+      <div class="section-desc"><p>Utility functions for creating deterministic objects quickly.</p></div>
+
+      <dl></dl></div><div class="section level2">
 
 
 
@@ -52,50 +82,69 @@
 
         </dt>
         <dd>Create item parameters from probabilities of right response</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="create_qmatrix.html">create_qmatrix()</a></code>
 
         </dt>
         <dd>Create Q-Matrix</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="create_test.html">create_test()</a></code>
 
         </dt>
         <dd>Create a matrix of items</dd>
-      </dl><dl><dt>
+      </dl></div><div class="section level2">
+      <h2 id="extracts">Extracts<a class="anchor" aria-label="anchor" href="#extracts"></a></h2>
 
-          <code><a href="generate_responses.html">generate_responses()</a></code>
+      <div class="section-desc"><p>Utility functions to create dataframes from fitted models.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="extract_item.html">extract_item()</a></code>
 
         </dt>
-        <dd>Generate responses to a test</dd>
-      </dl><dl><dt>
+        <dd>Convert the parameters of a model and/or test into a tibble for easier analysis</dd>
+      </dl></div><div class="section level2">
+      <h2 id="other">Other<a class="anchor" aria-label="anchor" href="#other"></a></h2>
 
-          <code><a href="generate_sample.html">generate_sample()</a></code>
+      <div class="section-desc"><p>Functions that do not fit in the categories above.</p></div>
 
-        </dt>
-        <dd>Generate sample of respondents (categorical data)</dd>
-      </dl><dl><dt>
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
 
           <code><a href="get_ideal_patterns.html">get_ideal_patterns()</a></code>
 
         </dt>
         <dd>Get the matrix of the possible ideal responses patterns from a qmatrix</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="get_information.html">get_information()</a></code>
 
         </dt>
         <dd>Get attribute information</dd>
-      </dl><dl><dt>
 
-          <code><a href="tidy_parameters.html">tidy_parameters()</a></code>
+        <dt>
+
+          <code><a href="set_simulation_seed.html">set_simulation_seed()</a></code>
 
         </dt>
-        <dd>Convert the parameters of a model and/or test into a tibble for easier analysis</dd>
+        <dd>Set simulation seed</dd>
       </dl></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
@@ -103,7 +152,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>

@@ -1,0 +1,161 @@
+# Creating a single simulation
+
+This is a tutorial that showcases how to use `saltr` in the creation of
+a set of simulated responses.
+
+## Generating a sample
+
+First we’ll generate a 200 respondents with the default values of .5
+base rate.
+
+``` r
+library(saltr)
+
+# by default we have .5 base rate and correlation between the attributes
+sample <- generate_sample(
+  sample_size = 200,
+  total_attrs=3,
+  base_rate = .5
+  )
+
+head(sample)
+#>   Attr1 Attr2 Attr3
+#> 1     0     0     0
+#> 2     1     1     1
+#> 3     0     0     0
+#> 4     0     0     1
+#> 5     1     0     1
+#> 6     0     0     0
+```
+
+## Creating a Q-Matrix
+
+Now we create our Q-matrix. We want a test with 3 simple items and 6
+complex items.
+
+``` r
+qmatrix <- create_qmatrix(num_attr=3, items_per_type=c(1,2))
+qmatrix
+#>       Attr1 Attr2 Attr3
+#> Item1     1     0     0
+#> Item2     0     1     0
+#> Item3     0     0     1
+#> Item4     1     1     0
+#> Item5     1     1     0
+#> Item6     1     0     1
+#> Item7     1     0     1
+#> Item8     0     1     1
+#> Item9     0     1     1
+```
+
+## Creating a test
+
+Now we need to create the “test”, that is, a matrix with all the item
+parameter. We can do this by creating the item parameters for each item
+using `create_item`. For example:
+
+``` r
+# non masters have a .2 probability of answering correctly and masters .6
+item <- create_item(.2, .6)
+```
+
+But it’s more convenient to use `create_test`. We have 2 options when
+creating a test.
+
+### Option 1: Using a matrix
+
+``` r
+# We can pass a matrix with the probabilities of masters and non masters 
+item_probs <- matrix(c(
+  .2, .6,
+  .1, .8,
+  .3, .5), 
+  ncol=2, byrow=TRUE)
+
+test <- create_test(item_probs)
+```
+
+### Option 2: Passing vectors
+
+``` r
+# We can also pass vectors with the probabilities  
+test <- create_test(
+  c(.1, .8),
+  c(.2, .7),
+  c(.3, .6)
+)
+```
+
+This second option also allows for passing vectors with a different
+amount of probabilities, which is what we need when we have items with
+different amount of attributes involved.
+
+``` r
+test <- create_test(
+  c(.1, .8),         # Simple items
+  c(.2, .7),
+  c(.3, .6),
+  c(.1, .4, .5, .7), # Complex items
+  c(.1, .4, .5, .7),
+  c(.1, .4, .5, .7),
+  c(.1, .4, .5, .7),
+  c(.1, .4, .5, .7),
+  c(.1, .4, .5, .7)
+)
+```
+
+The resulting matrix contains NA values. That’s key in the generation of
+the responses. If there’s 0s this will be considered as actual values of
+the parameters.
+
+Depending on the number of items and the way they are being generated,
+one option or the other could be more efficient. There’s also the hybrid
+option of using `do.call`.
+
+``` r
+do.call(
+  create_test, 
+  replicate(3, c(.2, .7), simplify = FALSE)
+  )
+#>           [,1]     [,2]
+#> [1,] -1.386294 2.233592
+#> [2,] -1.386294 2.233592
+#> [3,] -1.386294 2.233592
+```
+
+## Putting the pieces together
+
+Now we have a sample, a Q-matrix, and a test (the parameters of the
+items). We now use them all to generate the responses. First we might
+want to see everything checks out.
+
+``` r
+# get_probs gives us the probabilities instead of the 0/1s values. 
+responses_probabilities <- generate_responses(qmatrix, sample, test, get_probs=TRUE)
+head(responses_probabilities)
+#>   Item1 Item2 Item3 Item4 Item5 Item6 Item7 Item8 Item9
+#> 1   0.1   0.2   0.3   0.1   0.1   0.1   0.1   0.1   0.1
+#> 2   0.8   0.7   0.6   0.7   0.7   0.7   0.7   0.7   0.7
+#> 3   0.1   0.2   0.3   0.1   0.1   0.1   0.1   0.1   0.1
+#> 4   0.1   0.2   0.6   0.1   0.1   0.5   0.5   0.5   0.5
+#> 5   0.8   0.2   0.6   0.4   0.4   0.7   0.7   0.5   0.5
+#> 6   0.1   0.2   0.3   0.1   0.1   0.1   0.1   0.1   0.1
+```
+
+``` r
+responses <- generate_responses(qmatrix, sample, test)
+head(responses)
+#>   Item1 Item2 Item3 Item4 Item5 Item6 Item7 Item8 Item9
+#> 1     0     0     0     0     0     1     0     0     0
+#> 2     1     1     1     0     1     0     0     0     0
+#> 3     0     0     0     0     0     0     0     0     0
+#> 4     0     0     0     0     0     0     0     1     1
+#> 5     1     0     1     0     0     1     1     0     1
+#> 6     1     0     0     0     0     0     1     0     0
+```
+
+And finally we can fit a DCM model:
+
+``` r
+model <- CDM::gdina(responses, qmatrix, linkfct = "logit", progress = FALSE)
+```
