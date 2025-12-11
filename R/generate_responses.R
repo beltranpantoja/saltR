@@ -7,13 +7,20 @@
 #' @param respondents Binary matrix of respondents
 #' @param items matrix of items-parameters
 #' @param get_probs if you want the probability of correct response matrix.
+#' @param id simulation id to be used when setting the seed. If NULL, the seed doesn't get changed
 #'
 #' @returns a matrix of responses in the form 0/1 or the real probabilities.
 #' @export
 #'
-generate_responses <- function(qmat, respondents, items, get_probs = FALSE) {
+generate_responses <- function(
+  qmat,
+  respondents,
+  items,
+  get_probs = FALSE,
+  id = NULL
+) {
+  saltr::set_simulation_seed(id)
   probs <- .get_prob_matrix(qmat, respondents, items)
-
   if (get_probs) {
     return(probs)
   } else {

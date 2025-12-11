@@ -4,7 +4,7 @@
 \alias{generate_responses}
 \title{Generate responses to a test}
 \usage{
-generate_responses(qmat, respondents, items, get_probs = FALSE)
+generate_responses(qmat, respondents, items, get_probs = FALSE, id = NULL)
 }
 \arguments{
 \item{qmat}{Q-matrix}
@@ -14,6 +14,8 @@ generate_responses(qmat, respondents, items, get_probs = FALSE)
 \item{items}{matrix of items-parameters}
 
 \item{get_probs}{if you want the probability of correct response matrix.}
+
+\item{id}{simulation id to be used when setting the seed. If NULL, the seed doesn't get changed}
 }
 \value{
 a matrix of responses in the form 0/1 or the real probabilities.

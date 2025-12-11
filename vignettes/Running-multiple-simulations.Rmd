@@ -1,9 +1,25 @@
 ---
 title: "Running multiple simulations"
-output: html_document
-editor_options: 
-  chunk_output_type: console
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Running multiple simulations}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, message=FALSE, include=FALSE}
+library(saltr)
+library(tidyverse)
+library(CDM)
+```
+
 
 Let's create a simulation to measure the precision of the parameter estimation for DINO items when we don't have simple items.
 

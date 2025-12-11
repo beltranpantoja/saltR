@@ -1,9 +1,24 @@
 ---
 title: "Creating a single simulation"
-output: html_document
-editor_options: 
-  chunk_output_type: console
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Creating a single simulation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, message=FALSE, include=FALSE}
+library(saltr)
+library(tidyverse)
+library(CDM)
+```
 
 This is a tutorial that showcases how to use `saltr` in the creation of a set of simulated responses. 
 

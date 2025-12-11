@@ -7,30 +7,30 @@
 #' @returns a tibble with the estimation and/or real values of the items.
 #' @export
 #'
-tidy_parameters <- function(model = NULL, qmat = NULL, test = NULL) {
-  tidy_from_model <- NULL
-  tidy_from_test <- NULL
+extract_item <- function(model = NULL, qmat = NULL, test = NULL) {
+  from_model <- NULL
+  from_test <- NULL
 
   if (!is.null(model)) {
-    tidy_from_model <- .tidy_parameters_from_model(model)
+    from_model <- .extract_parameters_from_model(model)
   }
 
   if (!is.null(qmat) && !is.null(test)) {
-    tidy_from_test <- .tidy_parameters_from_test(qmat, test)
+    from_test <- .extract_parameters_from_test(qmat, test)
   }
 
-  if (!is.null(tidy_from_model) && !is.null(tidy_from_test)) {
+  if (!is.null(from_model) && !is.null(from_test)) {
     return(
       left_join(
-        tidy_from_test,
-        tidy_from_model,
+        from_test,
+        from_model,
         by = c("item", "partype.attr", "type")
       )
     )
-  } else if (!is.null(tidy_from_model)) {
-    return(tidy_from_model)
-  } else if (!is.null(tidy_from_test)) {
-    return(tidy_from_test)
+  } else if (!is.null(from_model)) {
+    return(from_model)
+  } else if (!is.null(from_test)) {
+    return(from_test)
   } else {
     stop("At least one input (model or qmat+test) must be provided.")
   }
@@ -44,7 +44,7 @@ tidy_parameters <- function(model = NULL, qmat = NULL, test = NULL) {
 #'
 #' @returns a tibble with the estimation of the items.
 #' @noRd
-.tidy_parameters_from_model <- function(model) {
+.extract_parameters_from_model <- function(model) {
   # Utility function
   .type_params <- function(x) {
     ifelse(x == "0", 0, lengths(str_split(x, "-")))
@@ -57,6 +57,22 @@ tidy_parameters <- function(model = NULL, qmat = NULL, test = NULL) {
 
   return(tidy_parameters)
 }
+# ===========================================================
+
+#' Convert the estimated probabilities of the items in a model into a tibble
+#'
+#' @param model fitted gdina model
+#'
+#' @returns a tibble with the estimation of the items.
+#' @noRd
+.extract_probabilities_from_model <- function(model) {
+  model_prob <- model$probitem %>%
+    tibble::as_tibble(.name_repair = "unique") %>%
+    dplyr::mutate(type = .type_params(partype)) %>%
+    select(item, nessskill, skillcomb, prob)
+
+  return(model_prob)
+}
 
 # ===========================================================
 
@@ -68,7 +84,7 @@ tidy_parameters <- function(model = NULL, qmat = NULL, test = NULL) {
 #'
 #' @returns a tibble with the real values of the items.
 #' @noRd
-.tidy_parameters_from_test <- function(qmat, test) {
+.extract_parameters_from_test <- function(qmat, test) {
   num_items <- nrow(qmat)
   num_attrs <- ncol(qmat)
 

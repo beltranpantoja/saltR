@@ -6,6 +6,7 @@
 #' @param attr_corr Correlation of attributes (or one if it's the same for all)
 #' @param attributes.names vector of names for the attributes. Defaults to "Attr#"
 #' @param responses.names vector of names for the responses. Defaults to "#"
+#' @param id simulation id to be used when setting the seed. If NULL, the seed doesn't get change.
 #'
 #' @returns A matrix of respondents and attributes.
 #' @export
@@ -16,8 +17,10 @@ generate_sample <- function(
   base_rate = .5,
   attr_corr = .5,
   attributes.names = NULL,
-  responses.names = NULL
+  responses.names = NULL,
+  id = NULL
 ) {
+  saltr::set_simulation_seed(id)
   marginal_prob <- .extend_vector(base_rate, total_attrs)
 
   num_pairs <- total_attrs * (total_attrs - 1) / 2

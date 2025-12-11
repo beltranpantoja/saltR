@@ -10,7 +10,8 @@ generate_sample(
   base_rate = 0.5,
   attr_corr = 0.5,
   attributes.names = NULL,
-  responses.names = NULL
+  responses.names = NULL,
+  id = NULL
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ generate_sample(
 \item{attributes.names}{vector of names for the attributes. Defaults to "Attr#"}
 
 \item{responses.names}{vector of names for the responses. Defaults to "#"}
+
+\item{id}{simulation id to be used when setting the seed. If NULL, the seed doesn't get change.}
 }
 \value{
 A matrix of respondents and attributes.

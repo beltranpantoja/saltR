@@ -1,7 +1,7 @@
 Package: saltr
 Type: Package
 Title: Simulation And Leaplab Tools in R 
-Version: 0.1.1
+Version: 0.1.2
 Authors@R: 
     person("Beltrán", "Pantoja", email = "bpp09644@uga.edu", role = c("aut", "cre"))
 Description: Simulation And Leaplab Tools in R.
@@ -11,8 +11,15 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Imports:
     bindata,
-    CDM
+    magrittr,
+    dplyr,
+    tibble,
+    tidyr
 Suggests: 
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    CDM,
+    knitr,
+    rmarkdown
 Config/testthat/edition: 3
 URL: https://beltranpantoja.github.io/saltR/, https://github.com/beltranpantoja/saltR
+VignetteBuilder: knitr

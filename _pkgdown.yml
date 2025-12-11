@@ -3,5 +3,25 @@ template:
   bootstrap: 5
 navbar:
   structure:
-    left:  [reference, articles]
+    left:  [reference, vignettes, articles]
     right: [search, github, lightswitch]
+
+reference:
+- title: Generate
+  desc: Functions that randomly generate base elements for a simulation.
+- contents:
+  - starts_with("generate_")
+- title: Create
+  desc: Utility functions for creating deterministic objects quickly.
+- contents:
+  - starts_with("create_")
+- title: Extracts
+  desc: Utility functions to create dataframes from fitted models.
+- contents:
+  - starts_with("extract_")
+- title: Other
+  desc: Functions that do not fit in the categories above.
+  contents:
+  - "get_ideal_patterns"
+  - "get_information"
+  - "set_simulation_seed"
