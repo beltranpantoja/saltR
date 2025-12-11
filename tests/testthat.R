@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(saltR)
+library(saltr)
 
-test_check("saltR")
+test_check("saltr")
