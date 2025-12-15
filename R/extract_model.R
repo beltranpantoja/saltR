@@ -21,10 +21,9 @@ extract_item <- function(model = NULL, qmat = NULL, test = NULL) {
 
   if (!is.null(from_model) && !is.null(from_test)) {
     return(
-      left_join(
+      merge(
         from_test,
-        from_model,
-        by = c("item", "partype.attr", "type")
+        from_model
       )
     )
   } else if (!is.null(from_model)) {
@@ -46,16 +45,20 @@ extract_item <- function(model = NULL, qmat = NULL, test = NULL) {
 #' @noRd
 .extract_parameters_from_model <- function(model) {
   # Utility function
-  .type_params <- function(x) {
-    ifelse(x == "0", 0, lengths(str_split(x, "-")))
+  type_params <- function(x) {
+    ifelse(x == "0", 0L, lengths(strsplit(x, "-", fixed = TRUE)))
   }
 
-  tidy_parameters <- model$coef %>%
-    tibble::as_tibble(.name_repair = "unique") %>%
-    dplyr::mutate(type = .type_params(partype)) %>%
-    select(item, partype.attr, type, est, se)
+  df <- as.data.frame(model$coef, stringsAsFactors = FALSE)
 
-  return(tidy_parameters)
+  df$type <- type_params(df$partype)
+  df[df$partype.attr == "", "partype.attr"] <- "intercept"
+
+
+  df <- df[, c("item", "partype.attr", "type", "est", "se")]
+
+  rownames(df) <- NULL
+  return(df[order(df$item), ])
 }
 # ===========================================================
 
@@ -66,12 +69,17 @@ extract_item <- function(model = NULL, qmat = NULL, test = NULL) {
 #' @returns a tibble with the estimation of the items.
 #' @noRd
 .extract_probabilities_from_model <- function(model) {
-  model_prob <- model$probitem %>%
-    tibble::as_tibble(.name_repair = "unique") %>%
-    dplyr::mutate(type = .type_params(partype)) %>%
-    select(item, nessskill, skillcomb, prob)
+  type_params <- function(x) {
+    ifelse(x == "0", 0L, lengths(strsplit(x, "-", fixed = TRUE)))
+  }
 
-  return(model_prob)
+  df <- as.data.frame(model$probitem, stringsAsFactors = FALSE)
+  df$type <- type_params(df$partype)
+
+  df <- df[, c("item", "nessskill", "skillcomb", "prob")]
+
+  rownames(df) <- NULL
+  return(df)
 }
 
 # ===========================================================
@@ -92,46 +100,36 @@ extract_item <- function(model = NULL, qmat = NULL, test = NULL) {
 
 
   # All items have intercepts so we add the first column of only 1s
-  item_parameters_mask <-
-    matrix(1, num_items, 1) %>%
-    cbind(
-      # Binary matrix with 1s where parameters should be
-      (qmat %*% t(saltr:::.parameter_attr_matrix(3)) == 1) * 1
-    )
+  item_parameters_mask <- cbind(
+    intercept = rep(1, num_items),
+    (qmat %*% t(saltr:::.parameter_attr_matrix(3)) == 1) * 1
+  )
 
   # Applying mask to the parameter-item matrix
-  parameter_matrix <-
-    t(saltr:::.get_parameter_item_matrix(qmat, test)) %>%
-    ifelse(item_parameters_mask == 1, ., NA)
+  parameter_matrix <- t(saltr:::.get_parameter_item_matrix(qmat, test))
+  parameter_matrix[item_parameters_mask != 1] <- NA
 
-  # Converting to tidy version
-  tidy_parameters <- parameter_matrix %>%
-    tibble::as_tibble(.name_repair = "universal_quiet") %>%
-    dplyr::mutate(
-      item = paste0("Item", 1:num_items),
-      .before = dplyr::everything()
-    ) %>%
-    magrittr::set_names(
-      c(
-        "item", "intercept",
-        partypes[, 1]
-      )
-    ) %>%
-    tidyr::pivot_longer(
-      cols = -item,
-      names_to = "partype.attr",
-      values_to = "real"
-    ) %>%
-    tidyr::drop_na() %>%
-    dplyr::mutate(
-      partype.attr = stringr::str_remove(partype.attr, "intercept"),
-      .before = real
-    ) %>%
-    dplyr::left_join(partypes, by = join_by(partype.attr)) %>%
-    dplyr::mutate(type = ifelse(is.na(type), 0, type)) %>%
-    dplyr::relocate(type, .before = real)
 
-  return(tidy_parameters)
+  df <- as.data.frame(parameter_matrix, stringsAsFactors = FALSE)
+
+  df$item <- paste0("Item", seq_len(num_items))
+
+  colnames(df) <- c("intercept", partypes$partype.attr, "item")
+  df
+  ## pivot_longer (manual)
+  long <- reshape(
+    df,
+    varying = names(df)[-ncol(df)],
+    v.names = "real",
+    timevar = "partype.attr",
+    times = names(df)[-ncol(df)],
+    direction = "long"
+  )
+
+  long <- long[!is.na(long$real), -4]
+  rownames(long) <- NULL
+
+  return(long[order(long$item), ])
 }
 
 
@@ -144,21 +142,21 @@ extract_item <- function(model = NULL, qmat = NULL, test = NULL) {
 #' @noRd
 .generate_partypes <- function(num_attrs) {
   profiles <- .create_attr_profiles(num_attrs, FALSE)
+  df <- as.data.frame(profiles)
 
-  partypes <- profiles %>%
-    as.data.frame() %>%
-    setNames(paste0("Attr", 1:num_attrs)) %>%
-    mutate(type = rowSums(across(where(is.numeric)))) %>%
-    mutate(
-      across(
-        starts_with("Attr"),
-        ~ ifelse(.x == 1, cur_column(), NA)
-      )
-    ) %>%
-    unite(
-      "partype.attr",
-      starts_with("Attr"),
-      sep = "-",
-      na.rm = T
-    )
+  colnames(df) <- paste0("Attr", seq_len(num_attrs))
+
+  df$type <- rowSums(df)
+
+  for (j in seq_len(num_attrs)) {
+    df[[j]] <- ifelse(df[[j]] == 1, colnames(df)[j], NA)
+  }
+
+  df$partype.attr <- apply(
+    df[paste0("Attr", seq_len(num_attrs))],
+    1,
+    function(x) paste(na.omit(x), collapse = "-")
+  )
+
+  df[, c("partype.attr", "type")]
 }

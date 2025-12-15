@@ -35,9 +35,14 @@
 #'
 #' @noRd
 .parameter_attr_matrix <- function(num_att) {
+  if (num_att == 1) {
+    return(
+      matrix(c(1))
+    )
+  }
+
   I <- diag(num_att)
   attr <- split(I, row(I))
-
   link_matrix <- I
   for (i in 2:num_att) {
     parameter <- combn(attr, i, FUN = function(x) Reduce(`+`, x), simplify = T)

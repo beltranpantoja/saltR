@@ -15,8 +15,8 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup, message=FALSE, include=FALSE}
-library(saltr)
 library(tidyverse)
+library(saltr)
 library(CDM)
 ```
 
@@ -57,23 +57,7 @@ When we call the modified simulation, even if we use the same seed before runnin
 
 There is not a clear way to fix this unless we can ensure the call to the random numbers maintains it's order and that we can ensure the call to seed at the right time. This could quickly become a headache. 
 
-To simplify this problem, saltr encapsulates all random generation on the `generate_*` functions which accept an `id` parameter that works as a seed.
-
-## Set simulation seed
-
-The `set_simulation_seed` function takes any kind of R object and uses it internally to set a seed, meaning it works really similarly to how the `set.seed` function works. The function also returns its value so it can be saved explicitly.
-
-```{r}
-id <- "my simulation id"
-
-seed1 <- saltr::set_simulation_seed(id) # seed1: 941561063
-A <- runif(10)
-
-seed2 <- saltr::set_simulation_seed(id)
-B <- runif(10)
-
-all(A==B) # The values generated are the same
-```
+To simplify this problem, saltr encapsulates all random generation on the `generate_*` functions which accept an `id` parameter that works as a seed. 
 
 ### Using it with the `generate` functions
 
@@ -97,6 +81,30 @@ B <- saltr::generate_sample(100, 3, id=id)
 all(A==B)
 ```
 
+An additional advantage of using an id, is that the function is called using `withr::with_seed()` which makes all the random calls be local and not affect the randomness of the rest of the code.
+
+```{r}
+set.seed(314)
+v1 <- runif(1)
+
+set.seed(314)
+A <- saltr::generate_sample(100, 3, id=id)
+B <- saltr::generate_sample(100, 3, id=id)
+v2 <- runif(1)
+
+all(v1 == v2)
+```
+
+## Warning
+
+The possible downside of doing this, is that the if we pass the same id to the functions they may be generating the same random numbers as they will have effectively the same seed and lead to hard to debug problems. To avoid this, we recommend to generate a single simulation id and use that to generate sub-ids using `generate_ids`.
+
+```{r}
+simulation_id <- "my-general-simulation-id"
+saltr::generate_ids(2, simulation_id)
+```
+
+
 ## Reproducing _some_ cases
 
 The powerful use case of this logic is that we can run simulations and save the ids which we used to generate the corresponding sample of examinees and responses without the need to run the whole simulation again. This means that we can ensure we generate the same conditions without needing to replicate the original processing.
@@ -112,12 +120,16 @@ test <- create_test(item_probs)
 ```
 
 We define a simulation function to simplify the process. This function only returns the estimated parameters under our defined model, *it doesn't save any information about the sample or the responses*. Also, note that we define an argument for the simulation id that we are then passing to the `generate_*` functions which we can later use to reconstruct the sample and the responses. 
+
 ```{r}
 simulation_function <- function(qmatrix, test, simulation_id) {
 
+  # To avoid generating the same numbers 
+  ids <- saltr::generate_ids(2, simulation_id)
+  
   # Generating the responses with the id argument for reproducibility
-  sample <- generate_sample(1000, 3, id=simulation_id)
-  responses <- generate_responses(qmatrix, sample, test, id=simulation_id)
+  sample <- generate_sample(1000, 3, id=ids[1])
+  responses <- generate_responses(qmatrix, sample, test, id=ids[2])
   
   # Fitting the model
   model <- CDM::gdina(responses, qmatrix, linkfct = "logit", progress = FALSE)
@@ -135,7 +147,7 @@ Now, we will run the simulation 10 times:
 set.seed(314)
 
 # We generate the ids for the simulation.
-ids <- saltr::generate_id(10)
+ids <- saltr::generate_ids(10)
 
 # We run the simulations
 results <- lapply(ids, function(id) simulation_function(qmatrix, test, id))
@@ -155,11 +167,11 @@ Because we have the id with which the random elements of the simulation were gen
 
 ```{r}
 # id of the simulation with a high estimation
-reproduce_id <- "d917dc543060d21da589c1e3686ab4b3"
+reproduce_id <- saltr::generate_ids(2, "428e1f425671e000254ba74d2884ba7b")
 
-# We reconstruct the sample and responses passing the id
-sample <- generate_sample(1000, 3, id=reproduce_id)
-responses <- generate_responses(qmatrix, sample, test, id=reproduce_id)
+# We reconstruct the sample and responses passing the respective id
+sample <- generate_sample(1000, 3, id=reproduce_id[1])
+responses <- generate_responses(qmatrix, sample, test, id=reproduce_id[2])
 
 # We fit the model to the responses
 model <- CDM::gdina(responses, qmatrix, linkfct = "logit", progress = FALSE)
