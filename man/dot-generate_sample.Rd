@@ -34,3 +34,4 @@ A matrix of respondents and attributes.
 Internal - Generate sample of respondents
 Note: Not encapsulated for randomness.
 }
+\keyword{internal}

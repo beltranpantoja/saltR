@@ -53,7 +53,7 @@ generate_responses <- function(
 #' @param get_probs if you want the probability of correct response matrix.
 #'
 #' @returns a matrix of responses in the form 0/1 or the real probabilities.
-#'
+#' @keywords internal
 .generate_responses <- function(
   qmat,
   respondents,

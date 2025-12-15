@@ -6,7 +6,7 @@
 #' @export
 #'
 generate_ids <- function(n = 1L, id = NULL) {
-  seed <- .create_seed_from_id(id)
+  seed <- .seed_from_id(id)
   if (!is.null(seed)) {
     withr::with_seed(
       seed,
@@ -23,7 +23,7 @@ generate_ids <- function(n = 1L, id = NULL) {
 #' @param n number of ids to generate
 #'
 #' @returns a vector of random ids to be used in simulations
-#'
+#' @keywords internal
 .generate_ids <- function(n = 1L) {
   sapply(
     1:n,

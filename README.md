@@ -10,7 +10,7 @@
 [![R-CMD-check](https://github.com/beltranpantoja/saltR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/beltranpantoja/saltR/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-# saltr <a href="https://beltranpantoja.github.io/saltR/"><img src="man/figures/saltr_logo.png" align="left" height="120" style="height: 120px"/></a>
+# saltr <a href="https://beltranpantoja.github.io/saltR/"><img src="man/figures/saltr_logo.png" alt="package logo" align="left" height="120" style="height: 120px"/></a>
 
 The goal of saltR, pronounced as the spanish word *saltar*, is to
 simplify the running of simulations in the context of DCMs by providing

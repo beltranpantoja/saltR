@@ -8,8 +8,8 @@
 #' @param id An arbitrary R object which will then be hashed and converted to an int.
 #'
 #' @returns The function returns a seed to be used.
-#'
-.create_seed_from_id <- function(id = NULL) {
+#' @keywords internal
+.seed_from_id <- function(id = NULL) {
   if (is.null(id)) {
     return(id)
   }

@@ -57,7 +57,7 @@ generate_sample <- function(
 #' @param responses.names vector of names for the responses. Defaults to "#"
 #'
 #' @returns A matrix of respondents and attributes.
-#'
+#' @keywords internal
 .generate_sample <- function(
   sample_size,
   total_attrs,

@@ -23,3 +23,4 @@ Note: Not encapsulated for randomness.
 Given a Q-matrix and a sample of respondents this function returns a simulated
 response matrix. Items parameter will automatically be mapped to the right attribute.
 }
+\keyword{internal}
