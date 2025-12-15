@@ -63,7 +63,7 @@ create_qmatrix <- function(
   simple_items <- asplit(diag(num_attr), 1, drop = T)
 
 
-  base_items <- t(combn(
+  base_items <- t(utils::combn(
     simple_items,
     item_attrs,
     function(x) Reduce(`+`, x),

@@ -20,11 +20,11 @@ generate_sample <- function(
   responses.names = NULL,
   id = NULL
 ) {
-  seed <- saltr:::.seed_from_id(id)
+  seed <- .seed_from_id(id)
   if (!is.null(seed)) {
-    withr:::with_seed(
+    withr::with_seed(
       seed,
-      saltr:::.generate_sample(
+      .generate_sample(
         sample_size,
         total_attrs,
         base_rate,
@@ -34,7 +34,7 @@ generate_sample <- function(
       )
     )
   } else {
-    saltr:::.generate_sample(
+    .generate_sample(
       sample_size,
       total_attrs,
       base_rate,

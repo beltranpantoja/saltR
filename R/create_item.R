@@ -21,7 +21,7 @@ create_item <- function(..., type = "LCDM", num_attrs = NULL) {
   probs <- c(...)
 
   if (!is.double(probs) && all(abs(probs) <= 1)) {
-    stop("Probabilities should all be doubles between 0 and 1.", asString(probs))
+    stop("Probabilities should all be doubles between 0 and 1.")
   }
 
   normalized_probs <- switch(item_type,
@@ -100,32 +100,3 @@ create_item <- function(..., type = "LCDM", num_attrs = NULL) {
   }
   return(full_probs)
 }
-
-
-
-# I think with this i can replace the att_mask that is hardcoded.
-# t((saltr:::.parameter_attr_matrix(3) %*% attrs_prof == 1)*1)-diag(7)
-
-# attrs_prof <- matrix(c(
-#   1, 0, 0,
-#   0, 1, 0,
-#   0, 0, 1,
-#   1, 1, 0,
-#   1, 0, 1,
-#   0, 1, 1,
-#   1, 1, 1
-# ), 3)
-
-
-
-items <- matrix(
-  c(
-    -2, 1, NA, NA,
-    -2, 1, NA, NA,
-    -2, 1, NA, NA,
-    -2, 2.1, 0, -1,
-    -2, 2.2, 4, -1.4,
-    -2, 1, 2, -2
-  ),
-  ncol = 4, byrow = T
-)

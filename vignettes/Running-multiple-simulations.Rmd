@@ -16,7 +16,6 @@ knitr::opts_chunk$set(
 
 ```{r setup, message=FALSE, include=FALSE}
 library(saltr)
-library(tidyverse)
 library(CDM)
 ```
 

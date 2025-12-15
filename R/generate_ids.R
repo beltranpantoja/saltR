@@ -6,14 +6,14 @@
 #' @export
 #'
 generate_ids <- function(n = 1L, id = NULL) {
-  seed <- saltr:::.create_seed_from_id(id)
+  seed <- .create_seed_from_id(id)
   if (!is.null(seed)) {
-    withr:::with_seed(
+    withr::with_seed(
       seed,
-      saltr:::.generate_ids(n)
+      .generate_ids(n)
     )
   } else {
-    saltr:::.generate_ids(n)
+    .generate_ids(n)
   }
 }
 

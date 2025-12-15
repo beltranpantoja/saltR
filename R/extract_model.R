@@ -102,11 +102,11 @@ extract_item <- function(model = NULL, qmat = NULL, test = NULL) {
   # All items have intercepts so we add the first column of only 1s
   item_parameters_mask <- cbind(
     intercept = rep(1, num_items),
-    (qmat %*% t(saltr:::.parameter_attr_matrix(3)) == 1) * 1
+    (qmat %*% t(.parameter_attr_matrix(3)) == 1) * 1
   )
 
   # Applying mask to the parameter-item matrix
-  parameter_matrix <- t(saltr:::.get_parameter_item_matrix(qmat, test))
+  parameter_matrix <- t(.get_parameter_item_matrix(qmat, test))
   parameter_matrix[item_parameters_mask != 1] <- NA
 
 
@@ -117,7 +117,7 @@ extract_item <- function(model = NULL, qmat = NULL, test = NULL) {
   colnames(df) <- c("intercept", partypes$partype.attr, "item")
   df
   ## pivot_longer (manual)
-  long <- reshape(
+  long <- stats::reshape(
     df,
     varying = names(df)[-ncol(df)],
     v.names = "real",
@@ -155,7 +155,7 @@ extract_item <- function(model = NULL, qmat = NULL, test = NULL) {
   df$partype.attr <- apply(
     df[paste0("Attr", seq_len(num_attrs))],
     1,
-    function(x) paste(na.omit(x), collapse = "-")
+    function(x) paste(stats::na.omit(x), collapse = "-")
   )
 
   df[, c("partype.attr", "type")]

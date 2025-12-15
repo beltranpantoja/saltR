@@ -15,7 +15,6 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup, message=FALSE, include=FALSE}
-library(tidyverse)
 library(saltr)
 library(CDM)
 ```
@@ -73,6 +72,8 @@ all(A==B)
 ```
 
 ```{r}
+id <- "my-simulation-id" # Can be any kind of hashable R object
+
 # We can generate samples passing an id which will ensure the same result as it acts as a seed.
 A <- saltr::generate_sample(100, 3, id=id)
 B <- saltr::generate_sample(100, 3, id=id)
@@ -121,6 +122,8 @@ test <- create_test(item_probs)
 
 We define a simulation function to simplify the process. This function only returns the estimated parameters under our defined model, *it doesn't save any information about the sample or the responses*. Also, note that we define an argument for the simulation id that we are then passing to the `generate_*` functions which we can later use to reconstruct the sample and the responses. 
 
+
+
 ```{r}
 simulation_function <- function(qmatrix, test, simulation_id) {
 
@@ -135,9 +138,9 @@ simulation_function <- function(qmatrix, test, simulation_id) {
   model <- CDM::gdina(responses, qmatrix, linkfct = "logit", progress = FALSE)
   
   # Extracting the results 
-  results <- extract_item(model, qmat = qmatrix, test = test) %>%
-    mutate(id = simulation_id) %>% 
-    select(-partype.attr)
+  results <- extract_item(model, qmat = qmatrix, test = test) 
+  results$id <- simulation_id
+  return(results)
 }
 ```
 
@@ -157,10 +160,10 @@ results_df <- do.call("rbind",results)
 On the results we can see that the standard error of the main effect of item 10 in one of the simulations is really big and the estimation is way off of the real value. 
 
 ```{r}
-results_df %>% 
-  filter(item == "Item10", type==1) %>% 
-  arrange(desc(se)) %>% 
-  head()
+item_10 <- results_df[results_df$item=="Item10", ]
+
+# Row 75 has a high value
+item_10[item_10$type == 1, c("real", "est", "se", "id")]
 ```
 
 Because we have the id with which the random elements of the simulation were generated, we can use it to reconstruct them for further inspection. But, first, let's make sure that we actually get the same results if we run the model "manually".

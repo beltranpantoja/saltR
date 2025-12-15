@@ -19,11 +19,11 @@ generate_responses <- function(
   get_probs = FALSE,
   id = NULL
 ) {
-  seed <- saltr:::.seed_from_id(id)
+  seed <- .seed_from_id(id)
   if (!is.null(seed)) {
-    withr:::with_seed(
+    withr::with_seed(
       seed,
-      saltr:::.generate_responses(
+      .generate_responses(
         qmat,
         respondents,
         items,
@@ -31,7 +31,7 @@ generate_responses <- function(
       )
     )
   } else {
-    saltr:::.generate_responses(
+    .generate_responses(
       qmat,
       respondents,
       items,
@@ -64,7 +64,7 @@ generate_responses <- function(
   if (get_probs) {
     return(probs)
   } else {
-    mask <- runif(prod(dim(probs)))
+    mask <- stats::runif(prod(dim(probs)))
     return((probs > mask) * 1)
   }
 }
@@ -125,10 +125,15 @@ generate_responses <- function(
   result <- attr_map * 0
 
   for (i in 1:nrow(attr_map)) {
-    # We take a row and ignore the NA values
-    values_to_map <- values[i, ] |>
-      na.omit() |>
-      c()
+    # extract row
+    values_to_map <- values[i, ]
+
+    # drop NA values
+    values_to_map <- stats::na.omit(values_to_map)
+
+    # ensure it is a plain vector
+    values_to_map <- as.vector(values_to_map)
+
 
     # We map the non-NA values to the attr_map row.
     result[i, attr_map[i, ] == 1] <- values_to_map

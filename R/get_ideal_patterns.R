@@ -7,7 +7,7 @@
 #' @export
 get_ideal_patterns <- function(qmat, rule) {
   # Normalize the writting of rule
-  rule <- str_to_upper(rule)
+  rule <- toupper(rule)
 
   profiles <- .create_attr_profiles(ncol(qmat))
   base_patterns <- profiles %*% t(qmat)
