@@ -1,18 +1,18 @@
-# Generate sample of respondents
+# Internal - Generate sample of respondents Note: Not encapsulated for randomness.
 
-Generate sample of respondents
+Internal - Generate sample of respondents Note: Not encapsulated for
+randomness.
 
 ## Usage
 
 ``` r
-generate_sample(
+.generate_sample(
   sample_size,
   total_attrs,
   base_rate = 0.5,
   attr_corr = 0.5,
   attributes.names = NULL,
-  responses.names = NULL,
-  id = NULL
+  responses.names = NULL
 )
 ```
 
@@ -41,10 +41,6 @@ generate_sample(
 - responses.names:
 
   vector of names for the responses. Defaults to "#"
-
-- id:
-
-  simulation id, to be used as a seed within this function.
 
 ## Value
 

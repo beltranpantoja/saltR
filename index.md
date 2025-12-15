@@ -1,4 +1,4 @@
-# saltr [![](reference/figures/saltr_logo.png)](https://beltranpantoja.github.io/saltR/)
+# saltr [![package logo](reference/figures/saltr_logo.png)](https://beltranpantoja.github.io/saltR/)
 
 The goal of saltR, pronounced as the spanish word *saltar*, is to
 simplify the running of simulations in the context of DCMs by providing

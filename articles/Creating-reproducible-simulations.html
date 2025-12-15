@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">saltr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -112,32 +112,13 @@ to seed at the right time. This could quickly become a headache.</p>
 <p>To simplify this problem, saltr encapsulates all random generation on
 the <code>generate_*</code> functions which accept an <code>id</code>
 parameter that works as a seed.</p>
-</div>
-<div class="section level2">
-<h2 id="set-simulation-seed">Set simulation seed<a class="anchor" aria-label="anchor" href="#set-simulation-seed"></a>
-</h2>
-<p>The <code>set_simulation_seed</code> function takes any kind of R
-object and uses it internally to set a seed, meaning it works really
-similarly to how the <code>set.seed</code> function works. The function
-also returns its value so it can be saved explicitly.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">id</span> <span class="op">&lt;-</span> <span class="st">"my simulation id"</span></span>
-<span></span>
-<span><span class="va">seed1</span> <span class="op">&lt;-</span> <span class="fu">saltr</span><span class="fu">::</span><span class="fu"><a href="../reference/set_simulation_seed.html">set_simulation_seed</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="co"># seed1: 941561063</span></span>
-<span><span class="va">A</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">seed2</span> <span class="op">&lt;-</span> <span class="fu">saltr</span><span class="fu">::</span><span class="fu"><a href="../reference/set_simulation_seed.html">set_simulation_seed</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span>
-<span><span class="va">B</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/all.html" class="external-link">all</a></span><span class="op">(</span><span class="va">A</span><span class="op">==</span><span class="va">B</span><span class="op">)</span> <span class="co"># The values generated are the same</span></span>
-<span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="using-it-with-the-generate-functions">Using it with the <code>generate</code> functions<a class="anchor" aria-label="anchor" href="#using-it-with-the-generate-functions"></a>
 </h3>
 <p>The <code>set_simulation_seed</code> is not really meant to be called
 directly, it’s meant to be used within the <code>generate_*</code>
 functions to create reproducible pipelines.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Generating to random samples</span></span>
 <span><span class="va">A</span> <span class="op">&lt;-</span> <span class="fu">saltr</span><span class="fu">::</span><span class="fu"><a href="../reference/generate_sample.html">generate_sample</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="va">B</span> <span class="op">&lt;-</span> <span class="fu">saltr</span><span class="fu">::</span><span class="fu"><a href="../reference/generate_sample.html">generate_sample</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">3</span><span class="op">)</span></span>
@@ -145,15 +126,45 @@ functions to create reproducible pipelines.</p>
 <span><span class="co"># These samples are going to be different</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/all.html" class="external-link">all</a></span><span class="op">(</span><span class="va">A</span><span class="op">==</span><span class="va">B</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] FALSE</span></span></code></pre></div>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># We can generate samples passing an id which will ensure the same result as it acts as a seed.</span></span>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">id</span> <span class="op">&lt;-</span> <span class="st">"my-simulation-id"</span> <span class="co"># Can be any kind of hashable R object</span></span>
+<span></span>
+<span><span class="co"># We can generate samples passing an id which will ensure the same result as it acts as a seed.</span></span>
 <span><span class="va">A</span> <span class="op">&lt;-</span> <span class="fu">saltr</span><span class="fu">::</span><span class="fu"><a href="../reference/generate_sample.html">generate_sample</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">3</span>, id<span class="op">=</span><span class="va">id</span><span class="op">)</span></span>
 <span><span class="va">B</span> <span class="op">&lt;-</span> <span class="fu">saltr</span><span class="fu">::</span><span class="fu"><a href="../reference/generate_sample.html">generate_sample</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">3</span>, id<span class="op">=</span><span class="va">id</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Equivalent samples</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/all.html" class="external-link">all</a></span><span class="op">(</span><span class="va">A</span><span class="op">==</span><span class="va">B</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
+<p>An additional advantage of using an id, is that the function is
+called using <code><a href="https://withr.r-lib.org/reference/with_seed.html" class="external-link">withr::with_seed()</a></code> which makes all the random
+calls be local and not affect the randomness of the rest of the
+code.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">314</span><span class="op">)</span></span>
+<span><span class="va">v1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">314</span><span class="op">)</span></span>
+<span><span class="va">A</span> <span class="op">&lt;-</span> <span class="fu">saltr</span><span class="fu">::</span><span class="fu"><a href="../reference/generate_sample.html">generate_sample</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">3</span>, id<span class="op">=</span><span class="va">id</span><span class="op">)</span></span>
+<span><span class="va">B</span> <span class="op">&lt;-</span> <span class="fu">saltr</span><span class="fu">::</span><span class="fu"><a href="../reference/generate_sample.html">generate_sample</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">3</span>, id<span class="op">=</span><span class="va">id</span><span class="op">)</span></span>
+<span><span class="va">v2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/all.html" class="external-link">all</a></span><span class="op">(</span><span class="va">v1</span> <span class="op">==</span> <span class="va">v2</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
 </div>
+</div>
+<div class="section level2">
+<h2 id="warning">Warning<a class="anchor" aria-label="anchor" href="#warning"></a>
+</h2>
+<p>The possible downside of doing this, is that the if we pass the same
+id to the functions they may be generating the same random numbers as
+they will have effectively the same seed and lead to hard to debug
+problems. To avoid this, we recommend to generate a single simulation id
+and use that to generate sub-ids using <code>generate_ids</code>.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">simulation_id</span> <span class="op">&lt;-</span> <span class="st">"my-general-simulation-id"</span></span>
+<span><span class="fu">saltr</span><span class="fu">::</span><span class="fu"><a href="../reference/generate_ids.html">generate_ids</a></span><span class="op">(</span><span class="fl">2</span>, <span class="va">simulation_id</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "ed18e2b156edb99dfef4ecd97fdd4bab" "70318f99aa32fbb9440133945a6a4fe3"</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="reproducing-some-cases">Reproducing <em>some</em> cases<a class="anchor" aria-label="anchor" href="#reproducing-some-cases"></a>
@@ -168,7 +179,7 @@ without needing to replicate the original processing.</p>
 </h3>
 <p>Let’s create a mock-up simulation study to see this idea in action.
 We will run some simulations using a fixed Q-matrix and test.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">qmatrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_qmatrix.html">create_qmatrix</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">4</span><span class="op">)</span></span>
 <span><span class="va">item_probs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">.4</span>,<span class="fl">.6</span><span class="op">)</span>, each<span class="op">=</span><span class="fl">12</span><span class="op">)</span>, ncol<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span>
 <span><span class="va">test</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_test.html">create_test</a></span><span class="op">(</span><span class="va">item_probs</span><span class="op">)</span></span></code></pre></div>
@@ -178,27 +189,30 @@ function only returns the estimated parameters under our defined model,
 responses</em>. Also, note that we define an argument for the simulation
 id that we are then passing to the <code>generate_*</code> functions
 which we can later use to reconstruct the sample and the responses.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">simulation_function</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">qmatrix</span>, <span class="va">test</span>, <span class="va">simulation_id</span><span class="op">)</span> <span class="op">{</span></span>
 <span></span>
+<span>  <span class="co"># To avoid generating the same numbers </span></span>
+<span>  <span class="va">ids</span> <span class="op">&lt;-</span> <span class="fu">saltr</span><span class="fu">::</span><span class="fu"><a href="../reference/generate_ids.html">generate_ids</a></span><span class="op">(</span><span class="fl">2</span>, <span class="va">simulation_id</span><span class="op">)</span></span>
+<span>  </span>
 <span>  <span class="co"># Generating the responses with the id argument for reproducibility</span></span>
-<span>  <span class="va">sample</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_sample.html">generate_sample</a></span><span class="op">(</span><span class="fl">1000</span>, <span class="fl">3</span>, id<span class="op">=</span><span class="va">simulation_id</span><span class="op">)</span></span>
-<span>  <span class="va">responses</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_responses.html">generate_responses</a></span><span class="op">(</span><span class="va">qmatrix</span>, <span class="va">sample</span>, <span class="va">test</span>, id<span class="op">=</span><span class="va">simulation_id</span><span class="op">)</span></span>
+<span>  <span class="va">sample</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_sample.html">generate_sample</a></span><span class="op">(</span><span class="fl">1000</span>, <span class="fl">3</span>, id<span class="op">=</span><span class="va">ids</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
+<span>  <span class="va">responses</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_responses.html">generate_responses</a></span><span class="op">(</span><span class="va">qmatrix</span>, <span class="va">sample</span>, <span class="va">test</span>, id<span class="op">=</span><span class="va">ids</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span></span>
 <span>  </span>
 <span>  <span class="co"># Fitting the model</span></span>
 <span>  <span class="va">model</span> <span class="op">&lt;-</span> <span class="fu">CDM</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/CDM/man/gdina.html" class="external-link">gdina</a></span><span class="op">(</span><span class="va">responses</span>, <span class="va">qmatrix</span>, linkfct <span class="op">=</span> <span class="st">"logit"</span>, progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span>  </span>
 <span>  <span class="co"># Extracting the results </span></span>
-<span>  <span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/extract_item.html">extract_item</a></span><span class="op">(</span><span class="va">model</span>, qmat <span class="op">=</span> <span class="va">qmatrix</span>, test <span class="op">=</span> <span class="va">test</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
-<span>    <span class="fu">mutate</span><span class="op">(</span>id <span class="op">=</span> <span class="va">simulation_id</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>    <span class="fu">select</span><span class="op">(</span><span class="op">-</span><span class="va">partype.attr</span><span class="op">)</span></span>
+<span>  <span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/extract_item.html">extract_item</a></span><span class="op">(</span><span class="va">model</span>, qmat <span class="op">=</span> <span class="va">qmatrix</span>, test <span class="op">=</span> <span class="va">test</span><span class="op">)</span> </span>
+<span>  <span class="va">results</span><span class="op">$</span><span class="va">id</span> <span class="op">&lt;-</span> <span class="va">simulation_id</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">results</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <p>Now, we will run the simulation 10 times:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">314</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># We generate the ids for the simulation.</span></span>
-<span><span class="va">ids</span> <span class="op">&lt;-</span> <span class="fu">saltr</span><span class="fu">::</span><span class="fu"><a href="../reference/generate_id.html">generate_id</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span>
+<span><span class="va">ids</span> <span class="op">&lt;-</span> <span class="fu">saltr</span><span class="fu">::</span><span class="fu"><a href="../reference/generate_ids.html">generate_ids</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># We run the simulations</span></span>
 <span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">ids</span>, <span class="kw">function</span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="fu">simulation_function</span><span class="op">(</span><span class="va">qmatrix</span>, <span class="va">test</span>, <span class="va">id</span><span class="op">)</span><span class="op">)</span></span>
@@ -206,66 +220,68 @@ which we can later use to reconstruct the sample and the responses.</p>
 <p>On the results we can see that the standard error of the main effect
 of item 10 in one of the simulations is really big and the estimation is
 way off of the real value.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">results_df</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">item</span> <span class="op">==</span> <span class="st">"Item10"</span>, <span class="va">type</span><span class="op">==</span><span class="fl">1</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu">arrange</span><span class="op">(</span><span class="fu">desc</span><span class="op">(</span><span class="va">se</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 6</span></span></span>
-<span><span class="co">#&gt;   item    type  real   est    se id                              </span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                           </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Item10     1 0.811 7.54  5.17  d917dc543060d21da589c1e3686ab4b3</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Item10     1 0.811 1.42  0.254 f22cc59b0a4e872e9d645b54749c9db9</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Item10     1 0.811 1.04  0.219 967475ea9ec41b0e8c51f30c02c82dc3</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> Item10     1 0.811 1.71  0.171 332ada5d1554e2ccf3d6c57a0629e31f</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> Item10     1 0.811 0.347 0.165 6507423e3347e3b1a1c612c28be8cb72</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> Item10     1 0.811 0.854 0.164 736e3d6d3d6e5a92b8c34ba10e8dd010</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">item_10</span> <span class="op">&lt;-</span> <span class="va">results_df</span><span class="op">[</span><span class="va">results_df</span><span class="op">$</span><span class="va">item</span><span class="op">==</span><span class="st">"Item10"</span>, <span class="op">]</span></span>
+<span></span>
+<span><span class="co"># Row 75 has a high value</span></span>
+<span><span class="va">item_10</span><span class="op">[</span><span class="va">item_10</span><span class="op">$</span><span class="va">type</span> <span class="op">==</span> <span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"real"</span>, <span class="st">"est"</span>, <span class="st">"se"</span>, <span class="st">"id"</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="co">#&gt;          real       est        se                               id</span></span>
+<span><span class="co">#&gt; 3   0.8109302 0.9326978 0.1471117 4d7f3b82d3a2a601f53e6b9f0cc54b27</span></span>
+<span><span class="co">#&gt; 27  0.8109302 1.4951888 0.1375087 d917dc543060d21da589c1e3686ab4b3</span></span>
+<span><span class="co">#&gt; 51  0.8109302 0.5392927 0.1322969 967475ea9ec41b0e8c51f30c02c82dc3</span></span>
+<span><span class="co">#&gt; 75  0.8109302 5.3798600 1.0983974 428e1f425671e000254ba74d2884ba7b</span></span>
+<span><span class="co">#&gt; 99  0.8109302 1.7902512 0.2725193 6507423e3347e3b1a1c612c28be8cb72</span></span>
+<span><span class="co">#&gt; 123 0.8109302 0.8090937 0.1294268 f22cc59b0a4e872e9d645b54749c9db9</span></span>
+<span><span class="co">#&gt; 147 0.8109302 0.4636806 0.1416791 d5226c00eefe9d80b774bef762be2210</span></span>
+<span><span class="co">#&gt; 171 0.8109302 0.6633324 0.1284041 332ada5d1554e2ccf3d6c57a0629e31f</span></span>
+<span><span class="co">#&gt; 195 0.8109302 1.0508208 0.1746198 5e5bce2398d2bbd1e3a8d28ca01b81ce</span></span>
+<span><span class="co">#&gt; 219 0.8109302 4.5923011 0.8676384 736e3d6d3d6e5a92b8c34ba10e8dd010</span></span></code></pre></div>
 <p>Because we have the id with which the random elements of the
 simulation were generated, we can use it to reconstruct them for further
 inspection. But, first, let’s make sure that we actually get the same
 results if we run the model “manually”.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># id of the simulation with a high estimation</span></span>
-<span><span class="va">reproduce_id</span> <span class="op">&lt;-</span> <span class="st">"d917dc543060d21da589c1e3686ab4b3"</span></span>
+<span><span class="va">reproduce_id</span> <span class="op">&lt;-</span> <span class="fu">saltr</span><span class="fu">::</span><span class="fu"><a href="../reference/generate_ids.html">generate_ids</a></span><span class="op">(</span><span class="fl">2</span>, <span class="st">"428e1f425671e000254ba74d2884ba7b"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># We reconstruct the sample and responses passing the id</span></span>
-<span><span class="va">sample</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_sample.html">generate_sample</a></span><span class="op">(</span><span class="fl">1000</span>, <span class="fl">3</span>, id<span class="op">=</span><span class="va">reproduce_id</span><span class="op">)</span></span>
-<span><span class="va">responses</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_responses.html">generate_responses</a></span><span class="op">(</span><span class="va">qmatrix</span>, <span class="va">sample</span>, <span class="va">test</span>, id<span class="op">=</span><span class="va">reproduce_id</span><span class="op">)</span></span>
+<span><span class="co"># We reconstruct the sample and responses passing the respective id</span></span>
+<span><span class="va">sample</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_sample.html">generate_sample</a></span><span class="op">(</span><span class="fl">1000</span>, <span class="fl">3</span>, id<span class="op">=</span><span class="va">reproduce_id</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="va">responses</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_responses.html">generate_responses</a></span><span class="op">(</span><span class="va">qmatrix</span>, <span class="va">sample</span>, <span class="va">test</span>, id<span class="op">=</span><span class="va">reproduce_id</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># We fit the model to the responses</span></span>
 <span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu">CDM</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/CDM/man/gdina.html" class="external-link">gdina</a></span><span class="op">(</span><span class="va">responses</span>, <span class="va">qmatrix</span>, linkfct <span class="op">=</span> <span class="st">"logit"</span>, progress <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># We check that the values obtained are the same that we saw from the simulations</span></span>
 <span><span class="va">model</span><span class="op">$</span><span class="va">item</span><span class="op">[</span><span class="fl">20</span>,<span class="op">]</span> </span>
-<span><span class="co">#&gt;     link   item itemno partype  rule      est       se partype.attr</span></span>
-<span><span class="co">#&gt; 20 logit Item10     10       1 GDINA 7.544344 5.174643        Attr3</span></span></code></pre></div>
+<span><span class="co">#&gt;     link   item itemno partype  rule     est       se partype.attr</span></span>
+<span><span class="co">#&gt; 20 logit Item10     10       1 GDINA 5.37986 1.098397        Attr3</span></span></code></pre></div>
 <p>Now we can inspect the sample and the responses to see what could
 have led to this estimation. For example, seeing the correlation between
 the mastery of attribute 3 and the response in that item or a
 contingency table. We can even fit another model or run statistical test
 to see if we keep or not that result.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">mastery</span> <span class="op">&lt;-</span> <span class="va">sample</span><span class="op">[</span>, <span class="fl">3</span><span class="op">]</span></span>
 <span><span class="va">responses</span> <span class="op">&lt;-</span> <span class="va">responses</span><span class="op">[</span>,<span class="st">"Item10"</span><span class="op">]</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></span><span class="op">(</span><span class="va">mastery</span>, <span class="va">responses</span><span class="op">)</span></span>
 <span><span class="co">#&gt;        responses</span></span>
 <span><span class="co">#&gt; mastery   0   1</span></span>
-<span><span class="co">#&gt;       0 295 201</span></span>
-<span><span class="co">#&gt;       1 216 288</span></span>
+<span><span class="co">#&gt;       0 288 200</span></span>
+<span><span class="co">#&gt;       1 197 315</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/cor.test.html" class="external-link">cor.test</a></span><span class="op">(</span><span class="va">mastery</span>, <span class="va">responses</span><span class="op">)</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;  Pearson's product-moment correlation</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; data:  mastery and responses</span></span>
-<span><span class="co">#&gt; t = 5.3252, df = 998, p-value = 1.246e-07</span></span>
+<span><span class="co">#&gt; t = 6.6313, df = 998, p-value = 5.444e-11</span></span>
 <span><span class="co">#&gt; alternative hypothesis: true correlation is not equal to 0</span></span>
 <span><span class="co">#&gt; 95 percent confidence interval:</span></span>
-<span><span class="co">#&gt;  0.1053137 0.2258870</span></span>
+<span><span class="co">#&gt;  0.1452888 0.2640618</span></span>
 <span><span class="co">#&gt; sample estimates:</span></span>
 <span><span class="co">#&gt;       cor </span></span>
-<span><span class="co">#&gt; 0.1662215</span></span></code></pre></div>
+<span><span class="co">#&gt; 0.2054316</span></span></code></pre></div>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

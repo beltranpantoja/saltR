@@ -56,26 +56,6 @@ To simplify this problem, saltr encapsulates all random generation on
 the `generate_*` functions which accept an `id` parameter that works as
 a seed.
 
-## Set simulation seed
-
-The `set_simulation_seed` function takes any kind of R object and uses
-it internally to set a seed, meaning it works really similarly to how
-the `set.seed` function works. The function also returns its value so it
-can be saved explicitly.
-
-``` r
-id <- "my simulation id"
-
-seed1 <- saltr::set_simulation_seed(id) # seed1: 941561063
-A <- runif(10)
-
-seed2 <- saltr::set_simulation_seed(id)
-B <- runif(10)
-
-all(A==B) # The values generated are the same
-#> [1] TRUE
-```
-
 ### Using it with the `generate` functions
 
 The `set_simulation_seed` is not really meant to be called directly,
@@ -93,6 +73,8 @@ all(A==B)
 ```
 
 ``` r
+id <- "my-simulation-id" # Can be any kind of hashable R object
+
 # We can generate samples passing an id which will ensure the same result as it acts as a seed.
 A <- saltr::generate_sample(100, 3, id=id)
 B <- saltr::generate_sample(100, 3, id=id)
@@ -100,6 +82,39 @@ B <- saltr::generate_sample(100, 3, id=id)
 # Equivalent samples
 all(A==B)
 #> [1] TRUE
+```
+
+An additional advantage of using an id, is that the function is called
+using
+[`withr::with_seed()`](https://withr.r-lib.org/reference/with_seed.html)
+which makes all the random calls be local and not affect the randomness
+of the rest of the code.
+
+``` r
+set.seed(314)
+v1 <- runif(1)
+
+set.seed(314)
+A <- saltr::generate_sample(100, 3, id=id)
+B <- saltr::generate_sample(100, 3, id=id)
+v2 <- runif(1)
+
+all(v1 == v2)
+#> [1] TRUE
+```
+
+## Warning
+
+The possible downside of doing this, is that the if we pass the same id
+to the functions they may be generating the same random numbers as they
+will have effectively the same seed and lead to hard to debug problems.
+To avoid this, we recommend to generate a single simulation id and use
+that to generate sub-ids using `generate_ids`.
+
+``` r
+simulation_id <- "my-general-simulation-id"
+saltr::generate_ids(2, simulation_id)
+#> [1] "ed18e2b156edb99dfef4ecd97fdd4bab" "70318f99aa32fbb9440133945a6a4fe3"
 ```
 
 ## Reproducing *some* cases
@@ -131,17 +146,20 @@ reconstruct the sample and the responses.
 ``` r
 simulation_function <- function(qmatrix, test, simulation_id) {
 
+  # To avoid generating the same numbers 
+  ids <- saltr::generate_ids(2, simulation_id)
+  
   # Generating the responses with the id argument for reproducibility
-  sample <- generate_sample(1000, 3, id=simulation_id)
-  responses <- generate_responses(qmatrix, sample, test, id=simulation_id)
+  sample <- generate_sample(1000, 3, id=ids[1])
+  responses <- generate_responses(qmatrix, sample, test, id=ids[2])
   
   # Fitting the model
   model <- CDM::gdina(responses, qmatrix, linkfct = "logit", progress = FALSE)
   
   # Extracting the results 
-  results <- extract_item(model, qmat = qmatrix, test = test) %>%
-    mutate(id = simulation_id) %>% 
-    select(-partype.attr)
+  results <- extract_item(model, qmat = qmatrix, test = test) 
+  results$id <- simulation_id
+  return(results)
 }
 ```
 
@@ -151,7 +169,7 @@ Now, we will run the simulation 10 times:
 set.seed(314)
 
 # We generate the ids for the simulation.
-ids <- saltr::generate_id(10)
+ids <- saltr::generate_ids(10)
 
 # We run the simulations
 results <- lapply(ids, function(id) simulation_function(qmatrix, test, id))
@@ -163,19 +181,21 @@ item 10 in one of the simulations is really big and the estimation is
 way off of the real value.
 
 ``` r
-results_df %>% 
-  filter(item == "Item10", type==1) %>% 
-  arrange(desc(se)) %>% 
-  head()
-#> # A tibble: 6 × 6
-#>   item    type  real   est    se id                              
-#>   <chr>  <dbl> <dbl> <dbl> <dbl> <chr>                           
-#> 1 Item10     1 0.811 7.54  5.17  d917dc543060d21da589c1e3686ab4b3
-#> 2 Item10     1 0.811 1.42  0.254 f22cc59b0a4e872e9d645b54749c9db9
-#> 3 Item10     1 0.811 1.04  0.219 967475ea9ec41b0e8c51f30c02c82dc3
-#> 4 Item10     1 0.811 1.71  0.171 332ada5d1554e2ccf3d6c57a0629e31f
-#> 5 Item10     1 0.811 0.347 0.165 6507423e3347e3b1a1c612c28be8cb72
-#> 6 Item10     1 0.811 0.854 0.164 736e3d6d3d6e5a92b8c34ba10e8dd010
+item_10 <- results_df[results_df$item=="Item10", ]
+
+# Row 75 has a high value
+item_10[item_10$type == 1, c("real", "est", "se", "id")]
+#>          real       est        se                               id
+#> 3   0.8109302 0.9326978 0.1471117 4d7f3b82d3a2a601f53e6b9f0cc54b27
+#> 27  0.8109302 1.4951888 0.1375087 d917dc543060d21da589c1e3686ab4b3
+#> 51  0.8109302 0.5392927 0.1322969 967475ea9ec41b0e8c51f30c02c82dc3
+#> 75  0.8109302 5.3798600 1.0983974 428e1f425671e000254ba74d2884ba7b
+#> 99  0.8109302 1.7902512 0.2725193 6507423e3347e3b1a1c612c28be8cb72
+#> 123 0.8109302 0.8090937 0.1294268 f22cc59b0a4e872e9d645b54749c9db9
+#> 147 0.8109302 0.4636806 0.1416791 d5226c00eefe9d80b774bef762be2210
+#> 171 0.8109302 0.6633324 0.1284041 332ada5d1554e2ccf3d6c57a0629e31f
+#> 195 0.8109302 1.0508208 0.1746198 5e5bce2398d2bbd1e3a8d28ca01b81ce
+#> 219 0.8109302 4.5923011 0.8676384 736e3d6d3d6e5a92b8c34ba10e8dd010
 ```
 
 Because we have the id with which the random elements of the simulation
@@ -185,19 +205,19 @@ results if we run the model “manually”.
 
 ``` r
 # id of the simulation with a high estimation
-reproduce_id <- "d917dc543060d21da589c1e3686ab4b3"
+reproduce_id <- saltr::generate_ids(2, "428e1f425671e000254ba74d2884ba7b")
 
-# We reconstruct the sample and responses passing the id
-sample <- generate_sample(1000, 3, id=reproduce_id)
-responses <- generate_responses(qmatrix, sample, test, id=reproduce_id)
+# We reconstruct the sample and responses passing the respective id
+sample <- generate_sample(1000, 3, id=reproduce_id[1])
+responses <- generate_responses(qmatrix, sample, test, id=reproduce_id[2])
 
 # We fit the model to the responses
 model <- CDM::gdina(responses, qmatrix, linkfct = "logit", progress = FALSE)
 
 # We check that the values obtained are the same that we saw from the simulations
 model$item[20,] 
-#>     link   item itemno partype  rule      est       se partype.attr
-#> 20 logit Item10     10       1 GDINA 7.544344 5.174643        Attr3
+#>     link   item itemno partype  rule     est       se partype.attr
+#> 20 logit Item10     10       1 GDINA 5.37986 1.098397        Attr3
 ```
 
 Now we can inspect the sample and the responses to see what could have
@@ -213,19 +233,19 @@ responses <- responses[,"Item10"]
 table(mastery, responses)
 #>        responses
 #> mastery   0   1
-#>       0 295 201
-#>       1 216 288
+#>       0 288 200
+#>       1 197 315
 
 cor.test(mastery, responses)
 #> 
 #>  Pearson's product-moment correlation
 #> 
 #> data:  mastery and responses
-#> t = 5.3252, df = 998, p-value = 1.246e-07
+#> t = 6.6313, df = 998, p-value = 5.444e-11
 #> alternative hypothesis: true correlation is not equal to 0
 #> 95 percent confidence interval:
-#>  0.1053137 0.2258870
+#>  0.1452888 0.2640618
 #> sample estimates:
 #>       cor 
-#> 0.1662215
+#> 0.2054316
 ```

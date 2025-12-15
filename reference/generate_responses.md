@@ -30,8 +30,7 @@ generate_responses(qmat, respondents, items, get_probs = FALSE, id = NULL)
 
 - id:
 
-  simulation id to be used when setting the seed. If NULL, the seed
-  doesn't get changed
+  simulation id, to be used as a seed within this function.
 
 ## Value
 

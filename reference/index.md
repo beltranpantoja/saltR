@@ -4,12 +4,12 @@
 
 Functions that randomly generate base elements for a simulation.
 
-- [`generate_id()`](https://beltranpantoja.github.io/saltR/reference/generate_id.md)
+- [`generate_ids()`](https://beltranpantoja.github.io/saltR/reference/generate_ids.md)
   : Generate random simulation ids
 - [`generate_responses()`](https://beltranpantoja.github.io/saltR/reference/generate_responses.md)
   : Generate responses to a test
 - [`generate_sample()`](https://beltranpantoja.github.io/saltR/reference/generate_sample.md)
-  : Generate sample of respondents (categorical data)
+  : Generate sample of respondents
 
 ## Create
 
@@ -39,5 +39,3 @@ Functions that do not fit in the categories above.
   qmatrix
 - [`get_information()`](https://beltranpantoja.github.io/saltR/reference/get_information.md)
   : Get attribute information
-- [`set_simulation_seed()`](https://beltranpantoja.github.io/saltR/reference/set_simulation_seed.md)
-  : Set simulation seed
