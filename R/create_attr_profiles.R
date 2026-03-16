@@ -2,12 +2,14 @@
 #'
 #' @description
 #' This is an utility function to be used by other functions.
+#' Prefer the use of [create_patterns()]
 #'
 #'
 #' @param num_attrs number of total attributes
 #' @param include_base_case should the profile of only 0s be included?
 #'
 #' @returns a matrix of profiles and attributes.
+#'
 #'
 #' @noRd
 .create_attr_profiles <- function(num_attrs, include_base_case = TRUE) {

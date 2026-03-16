@@ -1,7 +1,7 @@
 Package: saltr
 Type: Package
 Title: Simulation And Leaplab Tools in R 
-Version: 0.1.3
+Version: 0.2.0
 Authors@R: 
     person("Beltrán", "Pantoja", email = "bpp09644@uga.edu", role = c("aut", "cre"))
 Description: Simulation And Leaplab Tools in R.
@@ -22,3 +22,6 @@ Suggests:
 Config/testthat/edition: 3
 URL: https://beltranpantoja.github.io/saltR/, https://github.com/beltranpantoja/saltR
 VignetteBuilder: knitr
+Depends: 
+    R (>= 3.5)
+LazyData: true
