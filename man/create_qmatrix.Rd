@@ -7,16 +7,18 @@
 create_qmatrix(
   num_attr = 3L,
   items_per_type = 1,
-  attributes.names = NULL,
-  item.names = NULL
+  attributes_names = NULL,
+  item_names = NULL
 )
 }
 \arguments{
 \item{num_attr}{attributes in the Q-matrix}
 
-\item{items_per_type}{number or vector with the amount of items per unique combination}
+\item{items_per_type}{number or vector with the amount of items per unique
+combination}
 
-\item{attributes.names}{vector of names for the attributes. Defaults to "Attr#"}
+\item{attributes.names}{vector of names for the attributes. Defaults
+to "Attr#"}
 
 \item{item.names}{vector of names for the items. Defaults to "Item#"}
 }

@@ -1,8 +1,10 @@
-#' Returns a matrix of profiles and the probability of a correct response for all items.
+#' Returns a matrix of profiles and the probability of a correct response for
+#'  all items.
 #'
 #' @param model A GDINA object
 #'
-#' @returns a matrix of profiles and the probability of a correct response for all items.
+#' @returns a matrix of profiles and the probability of a correct response for
+#'  all items.
 #' @export
 #'
 get_probabilities_by_profile <- function(model) {
@@ -11,6 +13,7 @@ get_probabilities_by_profile <- function(model) {
   probs <- model$probitem
   num_attrs <- ncol(qmat)
 
+  # TODO: need to do this properly
   # We get the model's attributes names in order
   attr.labels <- colnames(model$attribute.patt.splitted)
 
@@ -19,7 +22,8 @@ get_probabilities_by_profile <- function(model) {
 
   items_prob <- matrix(NA, ncol = nrow(qmat), nrow = 2^ncol(qmat))
 
-  colnames(items_prob) <- paste0("V", 1:nrow(qmat)) # TODO: the name should come from the model
+  # TODO: the name should come from the model
+  colnames(items_prob) <- paste0("V", seq_len(nrow(qmat)))
 
   # This is the matrix we will fill
   profile_probs_mat <- cbind(
@@ -30,7 +34,9 @@ get_probabilities_by_profile <- function(model) {
 
   for (i in seq_len(nrow(probs))) {
     # We clean the attributes combination of the prob.
-    prob_attr <- as.numeric(strsplit(sub("^A", "", probs$skillcomb[i]), "")[[1]])
+    prob_attr <- as.numeric(
+      strsplit(sub("^A", "", probs$skillcomb[i]), "")[[1]]
+    )
 
     # We fetch the relevant attributes position from the qmatrix
     itemno <- probs$itemno[i]

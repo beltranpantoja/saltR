@@ -2,7 +2,8 @@
 % Please edit documentation in R/get_probabilities_by_profile.R
 \name{get_probabilities_by_profile}
 \alias{get_probabilities_by_profile}
-\title{Returns a matrix of profiles and the probability of a correct response for all items.}
+\title{Returns a matrix of profiles and the probability of a correct response for
+all items.}
 \usage{
 get_probabilities_by_profile(model)
 }
@@ -10,8 +11,10 @@ get_probabilities_by_profile(model)
 \item{model}{A GDINA object}
 }
 \value{
-a matrix of profiles and the probability of a correct response for all items.
+a matrix of profiles and the probability of a correct response for
+all items.
 }
 \description{
-Returns a matrix of profiles and the probability of a correct response for all items.
+Returns a matrix of profiles and the probability of a correct response for
+all items.
 }

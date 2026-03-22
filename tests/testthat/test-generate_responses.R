@@ -4,7 +4,7 @@ test_that("Check that probability of response generation works", {
   items <- matrix(rep(c(-2, 2), 3), ncol = 2, byrow = TRUE)
 
 
-  responses_probs <- saltr::generate_responses(qmat, sample, items, get_probs = TRUE)
+  responses_probs <- generate_responses(qmat, sample, items, get_probs = TRUE)
 
   # Creating the probs matrix
   expected_probs <- sample * 0

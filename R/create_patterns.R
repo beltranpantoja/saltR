@@ -1,9 +1,12 @@
 #' Create all possible permutations of the levels passed.
 #'
 #' @param num_vars number of columns
-#' @param include_filter vector of length `length(num_vars)`. It only includes rows that match. NA values work like wildcards.
-#' @param exclude_filter vector of length `length(num_vars)`. It excludes rows that match. NA values work like wildcards.
-#' @param levels Elements to be used in the combination. By default `c(0, 1)`, thus creating a binary matrix.
+#' @param include_filter vector of length `length(num_vars)`. It only includes
+#'  rows that match. NA values work like wildcards.
+#' @param exclude_filter vector of length `length(num_vars)`. It excludes rows
+#'  that match. NA values work like wildcards.
+#' @param levels Elements to be used in the combination. By default `c(0, 1)`,
+#'  thus creating a binary matrix.
 #' @param column_prefix The name of the output columns.
 #'
 #' @returns a matrix of all possible permutations.
@@ -21,13 +24,26 @@ create_patterns <- function(
 
   # we run the include_filter
   if (!is.null(include_filter)) {
-    patterns_matrix <- .filter_matrix(patterns_matrix, include_filter, include = TRUE)
+    patterns_matrix <- .filter_matrix(
+      patterns_matrix,
+      include_filter,
+      include = TRUE
+    )
   }
   if (!is.null(exclude_filter)) {
-    patterns_matrix <- .filter_matrix(patterns_matrix, exclude_filter, include = FALSE)
+    patterns_matrix <- .filter_matrix(
+      patterns_matrix,
+      exclude_filter,
+      include = FALSE
+    )
   }
-  colnames(patterns_matrix) <- paste0(column_prefix, 1:ncol(patterns_matrix))
-  return(patterns_matrix)
+
+  colnames(patterns_matrix) <- paste0(
+    column_prefix,
+    seq_len(ncol(patterns_matrix))
+  )
+
+  patterns_matrix
 }
 
 
@@ -51,9 +67,10 @@ create_patterns <- function(
     expand.grid(rep(levels_list, num_vars))
   )
 
-  # We are returning the columns reversed as the pattern is cleaner to read from left to right
-  return(bin_matrix[, ncol(bin_matrix):1, drop = FALSE])
+  # Columns reversed as the pattern is cleaner to read from left to right
+  bin_matrix[, rev(seq_len(ncol(bin_matrix))), drop = FALSE]
 }
+
 
 
 .filter_matrix <- function(mat, filter, include = TRUE) {
@@ -89,5 +106,5 @@ create_patterns <- function(
   }
 
   # We return a subset of the matrix according to the filter
-  return(mat[rows_match, ])
+  mat[rows_match, ]
 }

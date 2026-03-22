@@ -1,12 +1,16 @@
 #' Returns the likelihood and probability of mastery of the response patterns.
 #'
-#' @param items a matrix of probabilities for non-masters and masters. Each row is an item.
-#' @param response_patterns A binary matrix where each row is one response pattern. If none is passed, then all possible patterns are generated
+#' @param items a matrix of probabilities for non-masters and masters. Each row
+#'  is an item.
+#' @param response_patterns A binary matrix where each row is one response
+#'  pattern. If none is passed, then all possible patterns are generated
 #' @param prior The prior for non-mastery and mastery ratio.
-#' @param EAP_treshold Posterior threshold to be considered a master. By default is .5
+#' @param EAP_treshold Posterior threshold to be considered a master. By
+#'  default is .5
 #'
-#' @returns a matrix where the first columns contain the response patterns, the likelihood of seeing
-#' that pattern given a certain level of mastery. The probability of being a (non)master and the EAP (final classification)
+#' @returns a matrix where the first columns contain the response patterns,
+#'  the likelihood of seeing that pattern given a certain level of mastery.
+#'  The probability of being a (non)master and the EAP (final classification)
 #'
 #' @export
 #'
@@ -28,52 +32,60 @@ create_response_likelihood <- function(
 
   N <- nrow(items)
 
-  # If a set of response patterns is not passed, we create one that fits the items
+  # We create all possible patterns if none are provided.
   if (is.null(response_patterns)) {
     response_patterns <- create_patterns(num_vars = N)
   } else {
     # Checking the response patterns are well formed
     if (ncol(response_patterns) != N) {
       stop(
-        "The response patterns passed are not the correct size, they should have ",
+        "The response patterns passed are not the correct size. Expected: ",
         N, " elements"
       )
     }
   }
 
-  # This is the likelihood of each response conditional on their response
-  # P(x|a)
+  # Likelihood of response conditional on mastery P(x|a)
   patt_likelihood <- apply(
     response_patterns,
-    simplify = T, MARGIN = 1, FUN = \(x) .response_likelihood(x, items)
+    simplify = TRUE, MARGIN = 1, FUN = \(x) .response_likelihood(x, items)
   ) |> t()
 
-  # P(a|x) Non-master
+  # Response likelihood P(x)
+  response_lik <- (patt_likelihood %*% prior)
+
+  # Non-master prob marginal on response P(a|x)
   non_master_lik <-
-    (patt_likelihood[, 1, drop = FALSE] * prior[1]) / (patt_likelihood %*% prior)
+    (patt_likelihood[, 1, drop = FALSE] * prior[1]) / response_lik
 
-  # P(a|x) Master
+  # Master prob marginal on response P(a|x)
   master_lik <-
-    (patt_likelihood[, 2, drop = FALSE] * prior[2]) / (patt_likelihood %*% prior)
+    (patt_likelihood[, 2, drop = FALSE] * prior[2]) / response_lik
 
-  # EAP classification (or MAP?)
+
+  # EAP classification (or MAP?) MLE!!!
   EAP <- (master_lik >= EAP_treshold) * 1
 
   # Joining the elements of the likelihood matrix
-  lik_matrix <- cbind(patt_likelihood, non_master_lik, master_lik, EAP)
+  lik_matrix <- cbind(
+    patt_likelihood,
+    response_lik,
+    non_master_lik,
+    master_lik,
+    EAP
+  )
 
   colnames(lik_matrix) <- c(
     "lik_non",
     "lik_master",
+    "lik_response",
     "prob_non",
     "prob_master",
     "EAP"
   )
 
   # Returning the complete matrix
-  return(
-    cbind(response_patterns, lik_matrix)
-  )
+  cbind(response_patterns, lik_matrix)
 }
 
 
@@ -105,11 +117,10 @@ create_response_likelihood <- function(
     prod(ifelse(response == 1, 1 - slip, slip)) |>
     .clamp_prob()
 
-  return(
-    c(non_master, master)
-  )
+  # Return
+  c(non_master, master)
 }
 
 .clamp_prob <- function(value, eps = 1e-10) {
-  return(min(max(value, eps), 1 - eps))
+  min(max(value, eps), 1 - eps)
 }

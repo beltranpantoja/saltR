@@ -15,12 +15,11 @@ reference:
   desc: Utility functions for creating deterministic objects quickly.
 - contents:
   - starts_with("create_")
+- title: Get
+  desc: Functions to extract information from a fitted GDINA model as a data frame.
+- contents:
+  - starts_with("get_")
 - title: Extracts
   desc: Utility functions to create dataframes from fitted models.
 - contents:
   - starts_with("extract_")
-- title: Other
-  desc: Functions that do not fit in the categories above.
-  contents:
-  - "get_ideal_patterns"
-  - "get_information"

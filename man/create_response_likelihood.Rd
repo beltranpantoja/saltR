@@ -12,17 +12,21 @@ create_response_likelihood(
 )
 }
 \arguments{
-\item{items}{a matrix of probabilities for non-masters and masters. Each row is an item.}
+\item{items}{a matrix of probabilities for non-masters and masters. Each row
+is an item.}
 
-\item{response_patterns}{A binary matrix where each row is one response pattern. If none is passed, then all possible patterns are generated}
+\item{response_patterns}{A binary matrix where each row is one response
+pattern. If none is passed, then all possible patterns are generated}
 
 \item{prior}{The prior for non-mastery and mastery ratio.}
 
-\item{EAP_treshold}{Posterior threshold to be considered a master. By default is .5}
+\item{EAP_treshold}{Posterior threshold to be considered a master. By
+default is .5}
 }
 \value{
-a matrix where the first columns contain the response patterns, the likelihood of seeing
-that pattern given a certain level of mastery. The probability of being a (non)master and the EAP (final classification)
+a matrix where the first columns contain the response patterns,
+the likelihood of seeing that pattern given a certain level of mastery.
+The probability of being a (non)master and the EAP (final classification)
 }
 \description{
 Returns the likelihood and probability of mastery of the response patterns.

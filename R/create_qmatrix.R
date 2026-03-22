@@ -1,8 +1,10 @@
 #' Create Q-Matrix
 #'
 #' @param num_attr attributes in the Q-matrix
-#' @param items_per_type number or vector with the amount of items per unique combination
-#' @param attributes.names vector of names for the attributes. Defaults to "Attr#"
+#' @param items_per_type number or vector with the amount of items per unique
+#'  combination
+#' @param attributes.names vector of names for the attributes. Defaults
+#'  to "Attr#"
 #' @param item.names vector of names for the items. Defaults to "Item#"
 #'
 #' @returns a Q-matrix
@@ -18,12 +20,12 @@
 create_qmatrix <- function(
   num_attr = 3L,
   items_per_type = 1,
-  attributes.names = NULL,
-  item.names = NULL
+  attributes_names = NULL,
+  item_names = NULL
 ) {
   # We generate the partial qmatrices
   partial_qmatrices <- lapply(
-    1:length(items_per_type),
+    seq_along(items_per_type),
     function(i) {
       .simple_qmatrix(num_attr, i, items_per_type[i])
     }
@@ -32,16 +34,16 @@ create_qmatrix <- function(
   qmatrix <- do.call(rbind, partial_qmatrices)
 
   # Giving names to the qmatrix rows and columns
-  if (is.null(attributes.names)) {
-    attributes.names <- paste0("Attr", 1:num_attr)
+  if (is.null(attributes_names)) {
+    attributes_names <- paste0("Attr", 1:num_attr)
   }
-  if (is.null(item.names)) {
-    item.names <- paste0("Item", 1:dim(qmatrix)[1])
+  if (is.null(item_names)) {
+    item_names <- paste0("Item", seq_len(dim(qmatrix)[1]))
   }
-  colnames(qmatrix) <- attributes.names
-  rownames(qmatrix) <- item.names
+  colnames(qmatrix) <- attributes_names
+  rownames(qmatrix) <- item_names
 
-  return(qmatrix)
+  qmatrix
 }
 
 
@@ -60,17 +62,17 @@ create_qmatrix <- function(
 ) {
   stopifnot(num_attr >= 1L, item_attrs >= 1L, item_attrs <= num_attr)
 
-  simple_items <- asplit(diag(num_attr), 1, drop = T)
+  simple_items <- asplit(diag(num_attr), 1, drop = TRUE)
 
 
   base_items <- t(utils::combn(
     simple_items,
     item_attrs,
     function(x) Reduce(`+`, x),
-    simplify = T
+    simplify = TRUE
   ))
 
   qmat <- kronecker(base_items, matrix(1, repeat_items, 1))
 
-  return(qmat)
+  qmat
 }

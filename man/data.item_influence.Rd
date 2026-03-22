@@ -11,9 +11,12 @@ An object of class \code{list} of length 3.
 data.item_influence
 }
 \description{
-Q-matrix and simulated response data based in the Jurich & Madison (2023) simulation.
+Q-matrix and simulated response data based in the Jurich & Madison (2023)
+simulation.
 }
 \references{
-Jurich, D. P., & Madison, M. J. (2023). Measuring Item Influence for Diagnostic Classification Models. Educational Assessment, 28(4), 229–245. https://doi.org/10.1080/10627197.2023.2244411
+Jurich, D. P., & Madison, M. J. (2023). Measuring Item Influence
+for Diagnostic Classification Models. Educational Assessment, 28(4),
+229–245. https://doi.org/10.1080/10627197.2023.2244411
 }
 \keyword{datasets}

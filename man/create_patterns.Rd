@@ -15,11 +15,14 @@ create_patterns(
 \arguments{
 \item{num_vars}{number of columns}
 
-\item{include_filter}{vector of length \code{length(num_vars)}. It only includes rows that match. NA values work like wildcards.}
+\item{include_filter}{vector of length \code{length(num_vars)}. It only includes
+rows that match. NA values work like wildcards.}
 
-\item{exclude_filter}{vector of length \code{length(num_vars)}. It excludes rows that match. NA values work like wildcards.}
+\item{exclude_filter}{vector of length \code{length(num_vars)}. It excludes rows
+that match. NA values work like wildcards.}
 
-\item{levels}{Elements to be used in the combination. By default \code{c(0, 1)}, thus creating a binary matrix.}
+\item{levels}{Elements to be used in the combination. By default \code{c(0, 1)},
+thus creating a binary matrix.}
 
 \item{column_prefix}{The name of the output columns.}
 }
