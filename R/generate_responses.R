@@ -5,7 +5,7 @@
 #' response matrix. Items parameter will automatically be mapped to the right
 #'  attribute.
 #'
-#' @param respondents Binary matrix of respondents
+#' @param examinees Binary matrix of respondents
 #' @param items matrix of items parameters
 #' @param get_probs if you want the probability of correct response matrix.
 #'
@@ -13,11 +13,11 @@
 #' @export
 #'
 generate_responses <- function(
-  respondents,
+  examinees,
   items,
   get_probs = FALSE
 ) {
-  probs <- .get_prob_matrix(respondents, items)
+  probs <- .get_prob_matrix(examinees, items)
   if (get_probs) {
     return(probs)
   } else {
@@ -30,13 +30,13 @@ generate_responses <- function(
 
 #' Respondents-items matrix
 #'
-#' @param respondents Binary matrix of respondents
+#' @param examinees Binary matrix of respondents
 #' @param items matrix of items parameters
 #'
 #' @returns a matrix of responses
 #' @noRd
-.get_prob_matrix <- function(respondents, items) {
-  mask <- .get_attr_mask_from_profile(respondents)
+.get_prob_matrix <- function(examinees, items) {
+  mask <- .get_attr_mask_from_profile(examinees)
 
   # Make the NAs be 0 for the matrix multiplication
   items[is.na(items)] <- 0

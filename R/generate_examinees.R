@@ -86,15 +86,15 @@ generate_examinees <- function(
 
 
   # Giving names to the sample
-  if (is.null(attributes.names)) {
-    attributes.names <- paste0("Attr", 1:total_attrs)
+  if (is.null(attributes_names)) {
+    attributes_names <- paste0("Attr", 1:total_attrs)
   }
-  if (is.null(responses.names)) {
-    responses.names <- paste0("ID", 1:sample_size)
+  if (is.null(responses_names)) {
+    responses_names <- paste0("ID", 1:sample_size)
   }
 
-  colnames(sample) <- attributes.names
-  rownames(sample) <- responses.names
+  colnames(sample) <- attributes_names
+  rownames(sample) <- responses_names
 
   sample
 }

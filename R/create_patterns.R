@@ -7,7 +7,9 @@
 #'  that match. NA values work like wildcards.
 #' @param levels Elements to be used in the combination. By default `c(0, 1)`,
 #'  thus creating a binary matrix.
-#' @param column_prefix The name of the output columns.
+#' @param column_prefix Prefix for the column names. If column_labels is passed
+#'  then this is ignored.
+#' @param column_labels Labels for the columns output.
 #'
 #' @returns a matrix of all possible permutations.
 #' @export
@@ -17,8 +19,14 @@ create_patterns <- function(
   include_filter = NULL,
   exclude_filter = NULL,
   levels = c(0, 1),
-  column_prefix = "V"
+  column_prefix = "V",
+  column_labels = NULL
 ) {
+  # 0 has to be explicitly added if you want it in the matrix
+  if (!(0 %in% levels)) {
+    warning("0 not included in levels argument when creating the patterns")
+  }
+
   # First we get the complete matrix
   patterns_matrix <- .complete_patterns_matrix(num_vars, levels)
 
@@ -38,10 +46,15 @@ create_patterns <- function(
     )
   }
 
-  colnames(patterns_matrix) <- paste0(
-    column_prefix,
-    seq_len(ncol(patterns_matrix))
-  )
+  # If no column labels are passed, we use the prefix to create them.
+  if (is.null(column_labels)) {
+    column_labels <- paste0(
+      column_prefix,
+      seq_len(ncol(patterns_matrix))
+    )
+  }
+
+  colnames(patterns_matrix) <- column_labels
 
   patterns_matrix
 }

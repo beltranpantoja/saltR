@@ -1,7 +1,7 @@
 test_that("sample generation returns expected object", {
   set.seed(314)
 
-  sample <- generate_sample(
+  sample <- generate_examinees(
     1000,
     3,
     base_rate = .5,
@@ -19,7 +19,7 @@ test_that("Error and warning handling works for problematic attribute correlatio
   N <- 1000
 
   expect_error(
-    generate_sample(
+    generate_examinees(
       N,
       3,
       base_rate = c(.9, .9, .1),
@@ -33,7 +33,7 @@ test_that("Error and warning handling works for problematic attribute correlatio
   # But there could be a warning if outside the tolerance.
   set.seed(314)
   expect_warning(
-    generate_sample(
+    generate_examinees(
       N,
       3,
       base_rate = .9,
@@ -46,7 +46,7 @@ test_that("Error and warning handling works for problematic attribute correlatio
 
   # Increased tolerance avoids the warnings
   expect_no_warning(
-    generate_sample(
+    generate_examinees(
       N,
       3,
       base_rate = .9,

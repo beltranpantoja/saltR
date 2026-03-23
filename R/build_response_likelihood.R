@@ -14,7 +14,7 @@
 #'
 #' @export
 #'
-create_response_likelihood <- function(
+build_response_likelihood <- function(
   items,
   response_patterns = NULL,
   prior = NULL,

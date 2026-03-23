@@ -5,7 +5,7 @@
 #'
 #' @returns a matrix of responses patterns and items
 #' @export
-get_ideal_patterns <- function(qmat, rule) {
+build_ideal_patterns <- function(qmat, rule = "DINA") {
   # Normalize the writting of rule
   rule <- toupper(rule)
 
