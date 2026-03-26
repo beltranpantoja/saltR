@@ -11,7 +11,7 @@
 #' @returns A matrix of items and their parameters.
 #' @export
 #'
-build_items <- function(
+build_test_parameters <- function(
   qmat,
   ...
 ) {

@@ -9,7 +9,8 @@ create_patterns(
   include_filter = NULL,
   exclude_filter = NULL,
   levels = c(0, 1),
-  column_prefix = "V"
+  column_prefix = "V",
+  column_labels = NULL
 )
 }
 \arguments{
@@ -24,7 +25,10 @@ that match. NA values work like wildcards.}
 \item{levels}{Elements to be used in the combination. By default \code{c(0, 1)},
 thus creating a binary matrix.}
 
-\item{column_prefix}{The name of the output columns.}
+\item{column_prefix}{Prefix for the column names. If column_labels is passed
+then this is ignored.}
+
+\item{column_labels}{Labels for the columns output.}
 }
 \value{
 a matrix of all possible permutations.

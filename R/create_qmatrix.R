@@ -3,9 +3,9 @@
 #' @param num_attr attributes in the Q-matrix
 #' @param items_per_type number or vector with the amount of items per unique
 #'  combination
-#' @param attributes.names vector of names for the attributes. Defaults
+#' @param attributes_names vector of names for the attributes. Defaults
 #'  to "Attr#"
-#' @param item.names vector of names for the items. Defaults to "Item#"
+#' @param item_names vector of names for the items. Defaults to "Item#"
 #'
 #' @returns a Q-matrix
 #' @export
