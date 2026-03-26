@@ -2,32 +2,28 @@
 % Please edit documentation in R/build_response_likelihood.R
 \name{build_response_likelihood}
 \alias{build_response_likelihood}
-\title{Returns the likelihood and probability of mastery of the response patterns.}
+\title{Create the likelihood matrix for a matrix of probabilities of correct
+response for non-masters and masters marginal only on that attribute.}
 \usage{
-build_response_likelihood(
-  items,
-  response_patterns = NULL,
-  prior = NULL,
-  EAP_treshold = 0.5
-)
+build_response_likelihood(item_probs, response_patterns = NULL, prior = NULL)
 }
 \arguments{
-\item{items}{a matrix of probabilities for non-masters and masters. Each row
-is an item.}
+\item{item_probs}{a matrix of probabilities for non-masters and masters.
+Each row is an item.}
 
 \item{response_patterns}{A binary matrix where each row is one response
 pattern. If none is passed, then all possible patterns are generated}
 
-\item{prior}{The prior for non-mastery and mastery ratio.}
-
-\item{EAP_treshold}{Posterior threshold to be considered a master. By
-default is .5}
+\item{prior}{The prior for non-mastery and mastery ratio of the focus
+attribute}
 }
 \value{
 a matrix where the first columns contain the response patterns,
 the likelihood of seeing that pattern given a certain level of mastery.
-The probability of being a (non)master and the EAP (final classification)
+The probability of being a (non)master and the MLE (1 if estimated master,
+0 otherwise).
 }
 \description{
-Returns the likelihood and probability of mastery of the response patterns.
+Create the likelihood matrix for a matrix of probabilities of correct
+response for non-masters and masters marginal only on that attribute.
 }

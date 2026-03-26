@@ -17,10 +17,10 @@ create_qmatrix(
 \item{items_per_type}{number or vector with the amount of items per unique
 combination}
 
-\item{attributes.names}{vector of names for the attributes. Defaults
+\item{attributes_names}{vector of names for the attributes. Defaults
 to "Attr#"}
 
-\item{item.names}{vector of names for the items. Defaults to "Item#"}
+\item{item_names}{vector of names for the items. Defaults to "Item#"}
 }
 \value{
 a Q-matrix
