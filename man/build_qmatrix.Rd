@@ -4,7 +4,7 @@
 \alias{build_qmatrix}
 \title{Build a Q-Matrix from a a matrix of test parameters}
 \usage{
-build_qmatrix(test_parameters)
+build_qmatrix(test_parameters, attributes_names = NULL, item_names = NULL)
 }
 \arguments{
 \item{test_parameters}{a Matrix containing the items and their parameters as

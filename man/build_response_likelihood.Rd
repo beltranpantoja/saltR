@@ -5,7 +5,12 @@
 \title{Create the likelihood matrix for a matrix of probabilities of correct
 response for non-masters and masters marginal only on that attribute.}
 \usage{
-build_response_likelihood(item_probs, response_patterns = NULL, prior = NULL)
+build_response_likelihood(
+  item_probs,
+  response_patterns = NULL,
+  prior = NULL,
+  monotonicity = TRUE
+)
 }
 \arguments{
 \item{item_probs}{a matrix of probabilities for non-masters and masters.
@@ -16,6 +21,9 @@ pattern. If none is passed, then all possible patterns are generated}
 
 \item{prior}{The prior for non-mastery and mastery ratio of the focus
 attribute}
+
+\item{monotonicity}{if true, function will throw an error if any number on the
+first column is equal or higher than the second column.}
 }
 \value{
 a matrix where the first columns contain the response patterns,

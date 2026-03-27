@@ -1,15 +1,25 @@
 #' Returns a matrix item-parameters from model
 #'
-#' This extracts a model's item parameters as a dataframe. If `print_table` is true, then it also prints a pretty version of the table.
+#' This extracts a model's item parameters as a matrix If `pretty_print` is
+#'  true, then it also prints a pretty version of the table.
 #'
 #' @param model a GDINA object. It has to be logit link function.
-#' @param print_table boolean. If true it prints a pretty table. It returns a data frame silently.
+#' @param complete If the model only estimated some parameters this will not
+#'  show in the table. So, for example, the ACDM model will only return main
+#'  effects. If true this returns the complete table and fills the corresponding
+#'  parameters with 0. This also ensures a consistent order of the parameters.
+#' @param pretty_print boolean. If true it prints a pretty table. It returns a data frame silently.
 #' @param digits rounding digits when printing. The return is not approximated.
 #'
 #' @returns matrix of item-parameters
 #' @export
 #'
-get_item_parameters <- function(model, print_table = TRUE, digits = 2) {
+get_test_parameters <- function(
+  model,
+  complete = TRUE,
+  pretty_print = TRUE,
+  digits = 2
+) {
   # TODO: This could down the line also give the SE
 
   # Ensuring only logit linkfct
@@ -49,26 +59,31 @@ get_item_parameters <- function(model, print_table = TRUE, digits = 2) {
   items_order <- rownames(item_params) |>
     nchar() |>
     order()
+
   params_order <- colnames(item_params) |>
     nchar() |>
     order()
+
   item_params <- item_params[items_order, params_order]
 
-  if (print_table == TRUE) {
-    params_print <- as.matrix(item_params)
-    str_width <- digits + 3
+  if (complete == TRUE) {
+    mask <- build_test_parameters(model$q.matrix)
 
-    colnames(params_print) <- format(
-      paste0("\U03BB", colnames(item_params)), # Adding the lambda
-      justify = "centre",
-      width = digits + 3
-    ) # The rounding value plus space for -0.
+    idx <- which(!colnames(mask) %in% colnames(item_params))
+    columns_to_add <- mask[, idx, drop = FALSE]
 
-    print.table(params_print, digits = digits)
+    columns_to_add[columns_to_add == 0] <- NA
+    columns_to_add[columns_to_add == 1] <- 0
 
-    # We return the data frame silently
-    invisible(as.data.frame(item_params))
-  } else {
-    return(as.data.frame(item_params))
+    item_params <- cbind(item_params, columns_to_add)
+    item_params[, colnames(mask)]
   }
+
+
+  if (pretty_print == TRUE) {
+    pretty_print(item_params, digits = digits)
+  }
+
+  # Return
+  item_params
 }

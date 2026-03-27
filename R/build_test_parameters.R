@@ -63,8 +63,8 @@ build_test_parameters <- function(
   # Multiply by the mask. The t() ensures proper order
   out <- t(t(mask) * col_multipliers)
 
-  # Replace 0 with NA
-  out[out == 0] <- NA
+  # Replace all 0s in the original mask with NAs
+  out[mask == 0] <- NA
 
   # Return
   out

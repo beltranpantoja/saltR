@@ -8,7 +8,11 @@
 #'
 #' @returns a Q-matrix
 #' @export
-build_qmatrix <- function(test_parameters) {
+build_qmatrix <- function(
+  test_parameters,
+  attributes_names = NULL,
+  item_names = NULL
+) {
   # We don't care about the parameters, just which ones are present.
   # If there's a zero it is still considered as a parameter that's present
   test_parameters[!is.na(test_parameters)] <- 1
@@ -49,7 +53,7 @@ build_qmatrix <- function(test_parameters) {
 
   # Giving names to the qmatrix rows and columns
   if (is.null(attributes_names)) {
-    attributes_names <- paste0("Attr", 1:num_attr)
+    attributes_names <- paste0("Attr", seq_len(K))
   }
   if (is.null(item_names)) {
     item_names <- paste0("Item", seq_len(dim(qmatrix)[1]))
