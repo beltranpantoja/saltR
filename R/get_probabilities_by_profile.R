@@ -1,57 +1,61 @@
 #' Returns a matrix of profiles and the probability of a correct response for
 #'  all items.
 #'
+#' It works by extraxcting the test parameters with `get_test_parameters` and
+#'  then passing that to the `generate_responses(get_probs=TRUE)` with all
+#'  possible mastery patterns to get the expected probabilities.
+#'
 #' @param model A GDINA object
+#' @param marginal_attr returns the probabilities marginal on an attribute.
+#'  It does not consider distribution, is just a mean of the probabiities.
+#' @param which_items vector of items to be returnde. If Null it returns all.
 #'
 #' @returns a matrix of profiles and the probability of a correct response for
 #'  all items.
 #' @export
 #'
-get_probabilities_by_profile <- function(model) {
-  # We extract some utility variables
-  qmat <- model$q.matrix
-  probs <- model$probitem
-  num_attrs <- ncol(qmat)
+get_probabilities_by_profile <- function(
+  model,
+  marginal_attr = NULL,
+  which_items = NULL
+) {
+  # TODO: implement Throw warning if model does not have monotonicity activated
 
-  # TODO: need to do this properly
-  # We get the model's attributes names in order
-  attr.labels <- colnames(model$attribute.patt.splitted)
+  test <- get_test_parameters(model, pretty_print = FALSE)
+  qmatrix <- model$q.matrix
+  num_attr <- ncol(qmatrix)
 
-  # I construct all profiles
-  profiles <- create_patterns(ncol(qmat), column_prefix = "Attr")
-
-  items_prob <- matrix(NA, ncol = nrow(qmat), nrow = 2^ncol(qmat))
-
-  # TODO: the name should come from the model
-  colnames(items_prob) <- paste0("V", seq_len(nrow(qmat)))
-
-  # This is the matrix we will fill
-  profile_probs_mat <- cbind(
-    profiles,
-    items_prob
+  possible_profiles <- create_patterns(
+    num_attr,
+    column_labels = colnames(qmatrix)
   )
 
+  probs <- generate_responses(
+    examinees = possible_profiles,
+    test = test,
+    get_probs = TRUE
+  )
 
-  for (i in seq_len(nrow(probs))) {
-    # We clean the attributes combination of the prob.
-    prob_attr <- as.numeric(
-      strsplit(sub("^A", "", probs$skillcomb[i]), "")[[1]]
-    )
+  probs_profile <- cbind(possible_profiles, probs)
 
-    # We fetch the relevant attributes position from the qmatrix
-    itemno <- probs$itemno[i]
-    req_attrs <- which(qmat[itemno, ] == 1)
-
-    # We iterate over the rows to see which profile matches
-    matching_rows <- apply(
-      profiles[, req_attrs, drop = FALSE],
-      MARGIN = 1,
-      FUN = \(row) all(row == prob_attr)
-    )
-
-    # We update the matching profiles with the probability
-    profile_probs_mat[matching_rows, itemno + num_attrs] <- probs$prob[i]
+  if (!is.null(which_items)) {
+    # The item slicing needs to be offset to consider for the attr
+    slice_indices <- c(seq_len(num_attr), (which_items + num_attr))
+    probs_profile <- probs_profile[, slice_indices]
   }
 
-  return(profile_probs_mat)
+
+  # We take the probability marginal on an attribute
+  if (!is.null(marginal_attr)) {
+    probs_profile <- aggregate(
+      probs_profile[, -seq_len(num_attr)],
+      by = list(probs_profile[, marginal_attr]),
+      FUN = mean
+    )
+    # Labelling using the attribute name
+    names(probs_profile)[1] <- colnames(qmatrix)[marginal_attr] # Returning
+  }
+
+
+  probs_profile
 }

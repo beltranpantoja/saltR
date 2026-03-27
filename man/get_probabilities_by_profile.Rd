@@ -5,16 +5,22 @@
 \title{Returns a matrix of profiles and the probability of a correct response for
 all items.}
 \usage{
-get_probabilities_by_profile(model)
+get_probabilities_by_profile(model, marginal_attr = NULL, which_items = NULL)
 }
 \arguments{
 \item{model}{A GDINA object}
+
+\item{marginal_attr}{returns the probabilities marginal on an attribute.
+It does not consider distribution, is just a mean of the probabiities.}
+
+\item{which_items}{vector of items to be returnde. If Null it returns all.}
 }
 \value{
 a matrix of profiles and the probability of a correct response for
 all items.
 }
 \description{
-Returns a matrix of profiles and the probability of a correct response for
-all items.
+It works by extraxcting the test parameters with \code{get_test_parameters} and
+then passing that to the \code{generate_responses(get_probs=TRUE)} with all
+possible mastery patterns to get the expected probabilities.
 }

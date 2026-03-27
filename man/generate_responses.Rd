@@ -4,12 +4,12 @@
 \alias{generate_responses}
 \title{Generate responses to a test}
 \usage{
-generate_responses(examinees, items, get_probs = FALSE)
+generate_responses(examinees, test, get_probs = FALSE)
 }
 \arguments{
 \item{examinees}{Binary matrix of respondents}
 
-\item{items}{matrix of items parameters}
+\item{test}{matrix of items parameters}
 
 \item{get_probs}{if you want the probability of correct response matrix.}
 }

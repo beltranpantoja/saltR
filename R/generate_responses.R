@@ -6,7 +6,7 @@
 #'  attribute.
 #'
 #' @param examinees Binary matrix of respondents
-#' @param items matrix of items parameters
+#' @param test matrix of items parameters
 #' @param get_probs if you want the probability of correct response matrix.
 #'
 #' @returns a matrix of responses in the form 0/1 or the real probabilities.
@@ -14,10 +14,10 @@
 #'
 generate_responses <- function(
   examinees,
-  items,
+  test,
   get_probs = FALSE
 ) {
-  probs <- .get_prob_matrix(examinees, items)
+  probs <- .get_prob_matrix(examinees, test)
   if (get_probs) {
     return(probs)
   } else {
@@ -35,14 +35,14 @@ generate_responses <- function(
 #'
 #' @returns a matrix of responses
 #' @noRd
-.get_prob_matrix <- function(examinees, items) {
+.get_prob_matrix <- function(examinees, test) {
   mask <- .get_attr_mask_from_profile(examinees)
 
   # Make the NAs be 0 for the matrix multiplication
-  items[is.na(items)] <- 0
+  test[is.na(test)] <- 0
 
   # This product gives us the logit matrix respondents by items
-  logit_mat <- mask %*% t(items)
+  logit_mat <- mask %*% t(test)
 
   # Return the probs
   exp(logit_mat) / (1 + exp(logit_mat))

@@ -4,10 +4,15 @@
 \alias{get_test_parameters}
 \title{Returns a matrix item-parameters from model}
 \usage{
-get_test_parameters(model, pretty_print = TRUE, digits = 2)
+get_test_parameters(model, complete = TRUE, pretty_print = TRUE, digits = 2)
 }
 \arguments{
 \item{model}{a GDINA object. It has to be logit link function.}
+
+\item{complete}{If the model only estimated some parameters this will not
+show in the table. So, for example, the ACDM model will only return main
+effects. If true this returns the complete table and fills the corresponding
+parameters with 0. This also ensures a consistent order of the parameters.}
 
 \item{pretty_print}{boolean. If true it prints a pretty table. It returns a data frame silently.}
 
