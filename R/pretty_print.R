@@ -1,3 +1,15 @@
+#' Prints a matrix to the console in a prettier format
+#'
+#' This function prints a pretty table and returns the original object
+#'  so it can be used inside a pipeline.
+#'
+#' @param matrix matrix to print
+#' @param digits number of rounding digits
+#' @param prefix prefix for the columns. By default is the 'lambda' letter.
+#'
+#' @returns the same passed object
+#' @export
+#'
 pretty_print <- function(matrix, digits = 3, prefix = "\U03BB") {
   params_print <- round(as.matrix(matrix), digits)
   # The rounding value plus space for -0.

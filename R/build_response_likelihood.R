@@ -24,10 +24,10 @@ build_response_likelihood <- function(
   prior = NULL,
   monotonicity = TRUE
 ) {
-  # Check if item_probs are monotonic
+  # TODO: properly test this
   if (monotonicity) {
-    if (!all(item_probs[, 2] > item_probs[, 1])) {
-      stop("All the probabilities on the second column have to be larger")
+    if (!all(item_probs[, 2] >= item_probs[, 1])) {
+      stop("All the probabilities on the second column have to be equal or larger")
     }
   }
   # If a prior is not given, it is assumed to be equal for both.

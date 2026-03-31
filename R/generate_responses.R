@@ -8,6 +8,9 @@
 #' @param examinees Binary matrix of respondents
 #' @param test matrix of items parameters
 #' @param get_probs if you want the probability of correct response matrix.
+#' @param qmatrix Optional. All test are checked to see if they conform to some
+#'  Q-matrix. If some specific qmatrix gets passed, then it is checked against
+#'  that one.
 #'
 #' @returns a matrix of responses in the form 0/1 or the real probabilities.
 #' @export
@@ -15,8 +18,16 @@
 generate_responses <- function(
   examinees,
   test,
-  get_probs = FALSE
+  get_probs = FALSE,
+  qmatrix = NULL
 ) {
+  # First we check that the passed test is valid
+  valid <- check_test_parameters(test, qmatrix = qmatrix)
+
+  if (valid == FALSE) {
+    stop("The test is not properly formed")
+  }
+
   probs <- .get_prob_matrix(examinees, test)
   if (get_probs) {
     return(probs)

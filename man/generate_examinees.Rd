@@ -9,8 +9,8 @@ generate_examinees(
   total_attrs,
   base_rate = 0.5,
   attr_corr = 0,
-  binary_correlation = TRUE,
-  tolerance = 0.1,
+  strict = TRUE,
+  tolerance = NULL,
   attributes_names = NULL,
   responses_names = NULL
 )
@@ -24,12 +24,12 @@ generate_examinees(
 
 \item{attr_corr}{Correlation of attributes (or one if it's the same for all)}
 
-\item{binary_correlation}{Boolean. If true, the function tries to generate a
+\item{strict}{Boolean. If true, the function tries to generate a
 binary matrix with the given correlation. If it is not possible, then it
 raises and error. If false it is considered to be the correlation matrix of
 the underlying normal distributions.}
 
-\item{tolerance}{When binary_correlation=FALSE, the actual correlation values
+\item{tolerance}{When strict_binary_corr=FALSE, the actual correlation values
 can be far from the expected values. This gives a tolerance to avoid
 unexpected results.}
 

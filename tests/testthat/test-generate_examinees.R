@@ -24,7 +24,7 @@ test_that("Error and warning handling works for problematic attribute correlatio
       3,
       base_rate = c(.9, .9, .1),
       attr_corr = c(.1, .2, .9),
-      binary_correlation = TRUE
+      strict = TRUE
     ),
     regexp = "Invalid joint probability"
   )
@@ -39,7 +39,7 @@ test_that("Error and warning handling works for problematic attribute correlatio
       base_rate = .9,
       attr_corr = c(.1, .2, .9),
       tolerance = 0.01,
-      binary_correlation = FALSE
+      strict = FALSE
     ),
     regexp = "tolerance range"
   )
@@ -52,7 +52,7 @@ test_that("Error and warning handling works for problematic attribute correlatio
       base_rate = .9,
       attr_corr = c(.1, .2, .9),
       tolerance = Inf,
-      binary_correlation = FALSE
+      strict = FALSE
     )
   )
 })

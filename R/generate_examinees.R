@@ -4,11 +4,11 @@
 #' @param total_attrs How many attributes are in the sample
 #' @param base_rate Base rate per attribute (or one if it's the same for all)
 #' @param attr_corr Correlation of attributes (or one if it's the same for all)
-#' @param binary_correlation Boolean. If true, the function tries to generate a
+#' @param strict Boolean. If true, the function tries to generate a
 #'  binary matrix with the given correlation. If it is not possible, then it
 #'  raises and error. If false it is considered to be the correlation matrix of
 #'  the underlying normal distributions.
-#' @param tolerance When binary_correlation=FALSE, the actual correlation values
+#' @param tolerance When strict_binary_corr=FALSE, the actual correlation values
 #'  can be far from the expected values. This gives a tolerance to avoid
 #'  unexpected results.
 #' @param attributes.names vector of names for the attributes. Defaults to
@@ -23,8 +23,8 @@ generate_examinees <- function(
   total_attrs,
   base_rate = .5,
   attr_corr = 0,
-  binary_correlation = TRUE,
-  tolerance = .1,
+  strict = TRUE,
+  tolerance = NULL,
   attributes_names = NULL,
   responses_names = NULL
 ) {
@@ -40,48 +40,60 @@ generate_examinees <- function(
   R[lower.tri(R)] <- attr_corr
   R[upper.tri(R)] <- t(R)[upper.tri(R)]
 
-  # This is what bindata calls commonprob
-  joint_prob <- bindata::bincorr2commonprob(
-    margprob = marginal_prob,
-    bincorr = R
-  )
+  # If a tolerance is passed, then is not strict anymore
+  if (!is.null(tolerance)) {
+    strict <- FALSE
+  }
 
-  # If binary_correlation is True we need to check that we can create data
-  # That actually follows the constraints of correlation
-  if (binary_correlation) {
+
+  if (strict == FALSE) {
+    sample <- bindata::rmvbin(
+      sample_size,
+      margprob = marginal_prob,
+      sigma = R
+    )
+  } else {
+    # This is what bindata calls commonprob
+    joint_prob <- bindata::bincorr2commonprob(
+      margprob = marginal_prob,
+      bincorr = R
+    )
+
     error_messages <- .check_joint_probability_error(marginal_prob, joint_prob)
     # If we find that the probabilities don't conform to expected values we
     # show which combinations generate the problem and stop.
     if (length(error_messages) > 0) {
       stop(paste(error_messages, collapse = "\n"))
     }
+
+    # Now we call rmvbin using commonprob
+    # We can still get errors though.
+    sample <- bindata::rmvbin(
+      sample_size,
+      margprob = marginal_prob,
+      commonprob = joint_prob
+    )
   }
 
+  # If tolerance was passed, we check the values
+  if (is.double(tolerance)) {
+    # We check the correlation that the sample actually got
+    empirical_corr <- cor(sample)[lower.tri(cor(sample))]
+    over_tolerance <- any(abs(attr_corr - empirical_corr) > tolerance)
 
-  # Now we call rmvbin using commonprob
-  # We can still get errors though.
-  sample <- bindata::rmvbin(
-    sample_size,
-    margprob = marginal_prob,
-    commonprob = joint_prob
-  )
-
-  # We check the correlation that the sample actually got
-  empirical_corr <- cor(sample)[lower.tri(cor(sample))]
-  over_tolerance <- sum(abs(attr_corr - empirical_corr) > tolerance)
-
-  if (over_tolerance > 0) {
-    warning(sprintf(
-      paste(
-        "%d correlation values are outside tolerance range",
-        "Expected: %s",
-        "Obtained: %s",
-        sep = "\n"
-      ),
-      over_tolerance,
-      paste(round(attr_corr, 3), collapse = ", "),
-      paste(round(empirical_corr, 3), collapse = ", ")
-    ))
+    if (over_tolerance == TRUE) {
+      warning(sprintf(
+        paste(
+          "%d correlation values are outside tolerance range",
+          "Expected: %s",
+          "Obtained: %s",
+          sep = "\n"
+        ),
+        sum(over_tolerance),
+        paste(round(attr_corr, 3), collapse = ", "),
+        paste(round(empirical_corr, 3), collapse = ", ")
+      ))
+    }
   }
 
 
@@ -141,9 +153,9 @@ generate_examinees <- function(
 
   if (any(invalid)) {
     idx <- which(invalid, arr.ind = TRUE)
-    messages <- vapply(idx, function(k) {
-      i <- k[1]
-      j <- k[2]
+    messages <- vapply(seq_len(nrow(idx)), function(row_num) {
+      i <- idx[row_num, 1]
+      j <- idx[row_num, 2]
 
       val <- joint_prob[i, j]
       ul <- prob_upper_limit[i, j]

@@ -4,7 +4,7 @@
 \alias{generate_responses}
 \title{Generate responses to a test}
 \usage{
-generate_responses(examinees, test, get_probs = FALSE)
+generate_responses(examinees, test, get_probs = FALSE, qmatrix = NULL)
 }
 \arguments{
 \item{examinees}{Binary matrix of respondents}
@@ -12,6 +12,10 @@ generate_responses(examinees, test, get_probs = FALSE)
 \item{test}{matrix of items parameters}
 
 \item{get_probs}{if you want the probability of correct response matrix.}
+
+\item{qmatrix}{Optional. All test are checked to see if they conform to some
+Q-matrix. If some specific qmatrix gets passed, then it is checked against
+that one.}
 }
 \value{
 a matrix of responses in the form 0/1 or the real probabilities.
