@@ -8,8 +8,8 @@ Create Q-Matrix
 create_qmatrix(
   num_attr = 3L,
   items_per_type = 1,
-  attributes.names = NULL,
-  item.names = NULL
+  attributes_names = NULL,
+  item_names = NULL
 )
 ```
 
@@ -23,11 +23,11 @@ create_qmatrix(
 
   number or vector with the amount of items per unique combination
 
-- attributes.names:
+- attributes_names:
 
   vector of names for the attributes. Defaults to "Attr#"
 
-- item.names:
+- item_names:
 
   vector of names for the items. Defaults to "Item#"
 

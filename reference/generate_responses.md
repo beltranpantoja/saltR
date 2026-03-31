@@ -7,30 +7,28 @@ to the right attribute.
 ## Usage
 
 ``` r
-generate_responses(qmat, respondents, items, get_probs = FALSE, id = NULL)
+generate_responses(examinees, test, get_probs = FALSE, qmatrix = NULL)
 ```
 
 ## Arguments
 
-- qmat:
-
-  Q-matrix
-
-- respondents:
+- examinees:
 
   Binary matrix of respondents
 
-- items:
+- test:
 
-  matrix of items-parameters
+  matrix of items parameters
 
 - get_probs:
 
   if you want the probability of correct response matrix.
 
-- id:
+- qmatrix:
 
-  simulation id, to be used as a seed within this function.
+  Optional. All test are checked to see if they conform to some
+  Q-matrix. If some specific qmatrix gets passed, then it is checked
+  against that one.
 
 ## Value
 

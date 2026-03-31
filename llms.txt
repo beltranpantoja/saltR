@@ -33,53 +33,77 @@ tutorial
 
 # Package index
 
-## Generate
-
-Functions that randomly generate base elements for a simulation.
-
-- [`generate_ids()`](https://beltranpantoja.github.io/saltR/reference/generate_ids.md)
-  : Generate random simulation ids
-- [`generate_responses()`](https://beltranpantoja.github.io/saltR/reference/generate_responses.md)
-  : Generate responses to a test
-- [`generate_sample()`](https://beltranpantoja.github.io/saltR/reference/generate_sample.md)
-  : Generate sample of respondents
-
 ## Create
 
 Utility functions for creating deterministic objects quickly.
 
-- [`create_item()`](https://beltranpantoja.github.io/saltR/reference/create_item.md)
-  : Create item parameters from probabilities of right response
+- [`create_patterns()`](https://beltranpantoja.github.io/saltR/reference/create_patterns.md)
+  : Create all possible permutations of the levels passed.
 - [`create_qmatrix()`](https://beltranpantoja.github.io/saltR/reference/create_qmatrix.md)
   : Create Q-Matrix
-- [`create_test()`](https://beltranpantoja.github.io/saltR/reference/create_test.md)
-  : Create a matrix of items
 
-## Extracts
+## Generate
 
-Utility functions to create dataframes from fitted models.
+Functions that randomly generate base elements for a simulation.
 
-- [`extract_item()`](https://beltranpantoja.github.io/saltR/reference/extract_item.md)
-  : Convert the parameters of a model and/or test into a tibble for
-  easier analysis
+- [`generate_examinees()`](https://beltranpantoja.github.io/saltR/reference/generate_examinees.md)
+  : Generate sample of examinees
+- [`generate_responses()`](https://beltranpantoja.github.io/saltR/reference/generate_responses.md)
+  : Generate responses to a test
 
-## Other
+## Build
 
-Functions that do not fit in the categories above.
+Functions that randomly generate base elements for a simulation.
 
-- [`get_ideal_patterns()`](https://beltranpantoja.github.io/saltR/reference/get_ideal_patterns.md)
-  : Get the matrix of the possible ideal responses patterns from a
-  qmatrix
-- [`get_information()`](https://beltranpantoja.github.io/saltR/reference/get_information.md)
-  : Get attribute information
+- [`build_qmatrix()`](https://beltranpantoja.github.io/saltR/reference/build_qmatrix.md)
+  : Build a Q-Matrix from a a matrix of test parameters
+- [`build_response_likelihood()`](https://beltranpantoja.github.io/saltR/reference/build_response_likelihood.md)
+  : Create the likelihood matrix for a matrix of probabilities of
+  correct response for non-masters and masters marginal only on that
+  attribute.
+- [`build_test_parameters()`](https://beltranpantoja.github.io/saltR/reference/build_test_parameters.md)
+  : Create a matrix of items and their parameters
+
+## Get
+
+Functions to extract information from a gdina object.
+
+- [`get_probabilities_by_profile()`](https://beltranpantoja.github.io/saltR/reference/get_probabilities_by_profile.md)
+  : Returns a matrix of profiles and the probability of a correct
+  response for all items.
+- [`get_test_parameters()`](https://beltranpantoja.github.io/saltR/reference/get_test_parameters.md)
+  : Returns a matrix item-parameters from model
+
+## Change
+
+Change objects related to a model (e.g. a Q-matrix)
+
+## Utils
+
+Library utils
+
+- [`check_monotonicity()`](https://beltranpantoja.github.io/saltR/reference/check_monotonicity.md)
+  : Check that the monotonicity condition of the gdina model is
+  fullfilled. This is useful for when you don't want to force it, but
+  you want to know if the model was able to achieve it.
+- [`check_test_parameters()`](https://beltranpantoja.github.io/saltR/reference/check_test_parameters.md)
+  : Check if the test parameters are compatible with a Q-matrix
+- [`fit_lcdm()`](https://beltranpantoja.github.io/saltR/reference/fit_lcdm.md)
+  : Utility function to fits a LCDM model using the CDM package with
+  some convenient defaults.
+- [`pretty_print()`](https://beltranpantoja.github.io/saltR/reference/pretty_print.md)
+  : Prints a matrix to the console in a prettier format
+
+## Data
+
+Data included in the package
+
+- [`data.item_influence`](https://beltranpantoja.github.io/saltR/reference/data.item_influence.md)
+  : Item Influence for DCM.
 
 # Articles
 
-### All vignettes
+### Examples
 
-- [Creating a single
-  simulation](https://beltranpantoja.github.io/saltR/articles/Creating-a-single-simulation.md):
-- [Creating reproducible
-  simulations](https://beltranpantoja.github.io/saltR/articles/Creating-reproducible-simulations.md):
-- [Running multiple
-  simulations](https://beltranpantoja.github.io/saltR/articles/Running-multiple-simulations.md):
+- [Running a
+  simulation](https://beltranpantoja.github.io/saltR/articles/run_simulation.md):
