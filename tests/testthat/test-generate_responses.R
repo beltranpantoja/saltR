@@ -1,9 +1,9 @@
 test_that("Check that probability of response generation works", {
   qmat <- diag(3)
   examinees <- lower.tri(diag(3), TRUE) * 1
-  items <- create_items(qmat, -2, 2)
+  test <- build_test_parameters(qmat, -2, 2)
 
-  responses_probs <- generate_responses(examinees, items, get_probs = TRUE)
+  responses_probs <- generate_responses(examinees, test, get_probs = TRUE)
 
   # Creating the probs matrix
   expected_probs <- examinees * 0
@@ -16,11 +16,12 @@ test_that("Check that probability of response generation works", {
 test_that("Check that response generation works", {
   qmat <- diag(3)
   examinees <- lower.tri(diag(3), TRUE) * 1
-  items <- create_items(qmat, -2, 2)
+
+  test <- build_test_parameters(qmat, -2, 2)
 
 
   set.seed(314)
-  responses <- generate_responses(examinees, items)
+  responses <- generate_responses(examinees, test, get_probs = FALSE)
 
   expect_snapshot(responses)
 })

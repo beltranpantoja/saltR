@@ -33,10 +33,10 @@ the underlying normal distributions.}
 can be far from the expected values. This gives a tolerance to avoid
 unexpected results.}
 
-\item{attributes.names}{vector of names for the attributes. Defaults to
+\item{attributes_names}{vector of names for the attributes. Defaults to
 "Attr#"}
 
-\item{responses.names}{vector of names for the responses. Defaults to "ID#"}
+\item{responses_names}{vector of names for the responses. Defaults to "ID#"}
 }
 \value{
 A matrix of respondents and attributes.

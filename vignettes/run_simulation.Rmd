@@ -154,7 +154,7 @@ wrong_test <- test
 # Now item 2 has a main effect but the interaction 1-2 is NA 
 wrong_test[2,3] <- .5
 
-responses <- generate_responses(examinees, wrong_test)
+responses <- generate_responses(examinees, wrong_test, qmatrix=qmatrix)
 ```
 
 And now we can just fit our model.
@@ -180,6 +180,7 @@ examinees <- generate_examinees(
 )
 
 responses <- generate_responses(examinees, test)
-```
 
+responses
+```
 

@@ -11,9 +11,9 @@
 #' @param tolerance When strict_binary_corr=FALSE, the actual correlation values
 #'  can be far from the expected values. This gives a tolerance to avoid
 #'  unexpected results.
-#' @param attributes.names vector of names for the attributes. Defaults to
+#' @param attributes_names vector of names for the attributes. Defaults to
 #'  "Attr#"
-#' @param responses.names vector of names for the responses. Defaults to "ID#"
+#' @param responses_names vector of names for the responses. Defaults to "ID#"
 #'
 #' @returns A matrix of respondents and attributes.
 #' @export

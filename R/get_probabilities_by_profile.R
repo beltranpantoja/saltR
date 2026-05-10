@@ -9,7 +9,7 @@
 #' @param marginal_attr returns the probabilities marginal on an attribute.
 #'  It does not consider distribution, is just a mean of the probabiities.
 #' @param which_items vector of items to be returnde. If Null it returns all.
-#'
+#' @importFrom stats cor aggregate
 #' @returns a matrix of profiles and the probability of a correct response for
 #'  all items.
 #' @export
@@ -20,6 +20,9 @@ get_probabilities_by_profile <- function(
   which_items = NULL
 ) {
   # TODO: implement Throw warning if model does not have monotonicity activated
+  # TODO: Rethink this function. Use get_response_likelihood instead
+  # and if i want the probabilities of only one profile/item combo, better
+  # directly
 
   test <- get_test_parameters(model, pretty_print = FALSE)
   qmatrix <- model$q.matrix

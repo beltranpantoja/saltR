@@ -1,6 +1,6 @@
 test_that("Returns expected object", {
-  qmatrix <- data.item_influence$qmatrix
-  responses <- data.item_influence$responses
+  qmatrix <- item_influence$qmatrix
+  responses <- item_influence$responses
 
   # This also helps check that the qmatrix names are being handled
   colnames(qmatrix) <- paste0("A", 1:3)
@@ -12,8 +12,8 @@ test_that("Returns expected object", {
 })
 
 test_that("Throws error if model does not use linkfct logit", {
-  qmatrix <- data.item_influence$qmatrix
-  responses <- data.item_influence$responses
+  qmatrix <- item_influence$qmatrix
+  responses <- item_influence$responses
 
   model <- CDM::gdina(
     responses, qmatrix,
@@ -27,8 +27,8 @@ test_that("Throws error if model does not use linkfct logit", {
 })
 
 test_that("Argument marginal_attr works properly", {
-  qmatrix <- data.item_influence$qmatrix
-  responses <- data.item_influence$responses
+  qmatrix <- item_influence$qmatrix
+  responses <- item_influence$responses
   model <- fit_lcdm(responses, qmatrix)
 
 
@@ -41,8 +41,8 @@ test_that("Argument marginal_attr works properly", {
 })
 
 test_that("Argument which_items works properly", {
-  qmatrix <- data.item_influence$qmatrix
-  responses <- data.item_influence$responses
+  qmatrix <- item_influence$qmatrix
+  responses <- item_influence$responses
   model <- fit_lcdm(responses, qmatrix)
 
   expect_snapshot(
@@ -54,8 +54,8 @@ test_that("Argument which_items works properly", {
 })
 
 test_that("Arguments marginal_attr and which_items works properly in tandem", {
-  qmatrix <- data.item_influence$qmatrix
-  responses <- data.item_influence$responses
+  qmatrix <- item_influence$qmatrix
+  responses <- item_influence$responses
   model <- fit_lcdm(responses, qmatrix)
 
   expect_snapshot(

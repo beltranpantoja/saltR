@@ -1,6 +1,6 @@
 test_that("parameters complete works", {
-  qmatrix <- data.item_influence$qmatrix
-  responses <- data.item_influence$responses
+  qmatrix <- item_influence$qmatrix
+  responses <- item_influence$responses
 
   mod1 <- CDM::gdina(
     responses, qmatrix,
@@ -30,8 +30,9 @@ test_that("parameters complete works", {
 })
 
 test_that("parameters incomplete work", {
-  qmatrix <- data.item_influence$qmatrix
-  responses <- data.item_influence$responses
+  qmatrix <- item_influence$qmatrix
+  responses <- item_influence$responses
+
 
   mod1 <- CDM::gdina(
     responses, qmatrix,
@@ -49,7 +50,7 @@ test_that("parameters incomplete work", {
   )
 
   # None of these should have the 1-2-3 effect
-  test1 <- get_test_parameters(mod, complete = FALSE, pretty_print = FALSE)
+  test1 <- get_test_parameters(mod1, complete = FALSE, pretty_print = FALSE)
   test2 <- get_test_parameters(mod2, complete = FALSE, pretty_print = FALSE)
   test3 <- get_test_parameters(mod3, complete = FALSE, pretty_print = FALSE)
 
@@ -62,8 +63,9 @@ test_that("parameters incomplete work", {
 })
 
 test_that("only implemented for linkfct logit", {
-  qmatrix <- data.item_influence$qmatrix
-  responses <- data.item_influence$responses
+  qmatrix <- item_influence$qmatrix
+  responses <- item_influence$responses
+
 
   mod <- CDM::gdina(responses, qmatrix, linkfct = "identity", progress = FALSE)
 

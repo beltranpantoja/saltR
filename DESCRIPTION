@@ -11,12 +11,11 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Imports:
     bindata,
-    withr,
-    ids,
-    digest
+    stats
 Suggests: 
     testthat (>= 3.0.0),
     CDM,
+    ROI,
     knitr,
     rmarkdown
 Config/testthat/edition: 3

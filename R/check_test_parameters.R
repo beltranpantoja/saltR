@@ -8,6 +8,8 @@
 #' @export
 #'
 check_test_parameters <- function(test, qmatrix = NULL) {
+  # TODO: Add more information to the error
+
   test[!is.na(test)] <- 1
   test[is.na(test)] <- 0
 
@@ -24,11 +26,11 @@ check_test_parameters <- function(test, qmatrix = NULL) {
     expected_params <- build_test_parameters(qmatrix)
 
     # Check if dimensions match first to avoid errors
-    if (!all(dim(test_mat) == dim(expected_params))) {
+    if (!all(dim(test) == dim(expected_params))) {
       return(FALSE)
     }
 
     # Return a single TRUE/FALSE
-    return(all(test_mat == expected_params))
+    return(all(test == expected_params))
   }
 }

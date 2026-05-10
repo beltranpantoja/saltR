@@ -2,36 +2,21 @@
 % Please edit documentation in R/build_response_likelihood.R
 \name{build_response_likelihood}
 \alias{build_response_likelihood}
-\title{Create the likelihood matrix for a matrix of probabilities of correct
-response for non-masters and masters marginal only on that attribute.}
+\title{Create the likelihood matrix of all possible response given a profile.}
 \usage{
-build_response_likelihood(
-  item_probs,
-  response_patterns = NULL,
-  prior = NULL,
-  monotonicity = TRUE
-)
+build_response_likelihood(test_parameters, profile)
 }
 \arguments{
-\item{item_probs}{a matrix of probabilities for non-masters and masters.
-Each row is an item.}
+\item{test_parameters}{a Matrix containing the items and their parameters as
+created by \code{build_test_parameters}. If the test is extracted from a model
+using \code{get_test_parameters} it should be extracted using the parameter
+\code{complete=TRUE}.}
 
-\item{response_patterns}{A binary matrix where each row is one response
-pattern. If none is passed, then all possible patterns are generated}
-
-\item{prior}{The prior for non-mastery and mastery ratio of the focus
-attribute}
-
-\item{monotonicity}{if true, function will throw an error if any number on the
-first column is equal or higher than the second column.}
+\item{profile}{numeric vector corresponding to the assumed profile.}
 }
 \value{
-a matrix where the first columns contain the response patterns,
-the likelihood of seeing that pattern given a certain level of mastery.
-The probability of being a (non)master and the MLE (1 if estimated master,
-0 otherwise).
+a matrix
 }
 \description{
-Create the likelihood matrix for a matrix of probabilities of correct
-response for non-masters and masters marginal only on that attribute.
+Create the likelihood matrix of all possible response given a profile.
 }
