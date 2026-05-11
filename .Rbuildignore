@@ -7,3 +7,6 @@
 ^README\.Rmd$
 ^\.lintr$
 ^data-raw$
+^dev$
+^doc$
+^Meta$

@@ -9,6 +9,7 @@
 #' @param ... extra parameters to pass to the gdina call.
 #'
 #' @returns an object gdina.
+#' @import ROI
 #' @export
 #'
 fit_lcdm <- function(

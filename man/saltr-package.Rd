@@ -4,7 +4,7 @@
 \name{saltr-package}
 \alias{saltr}
 \alias{saltr-package}
-\title{saltr: Simulation And Leaplab Tools in R}
+\title{saltr: Simulation and Leaplab Tools in R}
 \description{
 Simulation And Leaplab Tools in R.
 }

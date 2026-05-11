@@ -28,7 +28,7 @@ help create readable simulations through the use of semantically meaningful func
 A lot of the statistics libraries make heavy use of objects. This allows packages
 to handle things neatly and avoid errors that can be hard to debug on the user side. The downside is, however, that this closed systems are stiff black boxes, most of the time require a lot of custom code and have a steeper learning curve. 
 
-Saltr is a library that aims to give researchers, in the DCM field, the tools they need to jump start their simulations by making it easier to work with matrices and the gdina objects from the [CDM package](https://cran.r-project.org/web/packages/CDM/index.html). Saltr has been designed following the [tidyverse style guide](https://style.tidyverse.org/functions.html) so all functions are actions that are designed to work nicely with the pipe operator `|>`.  Additionally, 
+Saltr is a library that aims to give researchers, in the DCM field, the tools they need to jump start their simulations by making it easier to work with matrices and the gdina objects from the [CDM package](https://CRAN.R-project.org/package=CDM). Saltr has been designed following the [tidyverse style guide](https://style.tidyverse.org/functions.html) so all functions are actions that are designed to work nicely with the pipe operator `|>`.  Additionally, 
 functions try and implement meaningful `warning` and `error` messages that help 
 fix bugs during the coding process.
 

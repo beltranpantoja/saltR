@@ -28,8 +28,8 @@ code and have a steeper learning curve.
 Saltr is a library that aims to give researchers, in the DCM field, the
 tools they need to jump start their simulations by making it easier to
 work with matrices and the gdina objects from the [CDM
-package](https://cran.r-project.org/web/packages/CDM/index.html). Saltr
-has been designed following the [tidyverse style
+package](https://CRAN.R-project.org/package=CDM). Saltr has been
+designed following the [tidyverse style
 guide](https://style.tidyverse.org/functions.html) so all functions are
 actions that are designed to work nicely with the pipe operator `|>`.
 Additionally, functions try and implement meaningful `warning` and

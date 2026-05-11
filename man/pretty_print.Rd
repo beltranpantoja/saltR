@@ -4,14 +4,15 @@
 \alias{pretty_print}
 \title{Prints a matrix to the console in a prettier format}
 \usage{
-pretty_print(matrix, digits = 3, prefix = "λ")
+pretty_print(matrix, digits = 3, prefix = NULL)
 }
 \arguments{
 \item{matrix}{matrix to print}
 
 \item{digits}{number of rounding digits}
 
-\item{prefix}{prefix for the columns. By default is the 'lambda' letter.}
+\item{prefix}{prefix for the columns.By default, uses the Greek letter
+lambda in interactive sessions.}
 }
 \value{
 the same passed object

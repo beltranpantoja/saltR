@@ -5,12 +5,16 @@
 #'
 #' @param matrix matrix to print
 #' @param digits number of rounding digits
-#' @param prefix prefix for the columns. By default is the 'lambda' letter.
+#' @param prefix prefix for the columns.By default, uses the Greek letter
+#'  lambda in interactive sessions.
 #'
 #' @returns the same passed object
 #' @export
 #'
-pretty_print <- function(matrix, digits = 3, prefix = "\U03BB") {
+pretty_print <- function(matrix, digits = 3, prefix = NULL) {
+  if (is.null(prefix)) {
+    prefix <- if (interactive()) "\U03BB" else "lambda"
+  }
   params_print <- round(as.matrix(matrix), digits)
   # The rounding value plus space for -0.
   str_width <- digits + 4

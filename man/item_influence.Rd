@@ -8,7 +8,7 @@
 A numeric matrix with 100 rows and 5 columns.
 }
 \source{
-\url{https://doi.org/10.1080/10627197.2023.2244411}
+\doi{10.1080/10627197.2023.2244411}
 }
 \usage{
 item_influence
