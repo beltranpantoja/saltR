@@ -13,7 +13,11 @@ build_response_likelihood <- function(
   test_parameters,
   profile
 ) {
-  prob_correct <- generate_responses(t(profile), test_parameters, get_probs = TRUE)
+  prob_correct <- generate_responses(
+    t(profile),
+    test_parameters,
+    get_probs = TRUE
+  )
 
   # First column is having it wrong, second is right
   item_probs <- t(rbind(1 - prob_correct, prob_correct))

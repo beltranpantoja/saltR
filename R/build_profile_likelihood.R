@@ -20,7 +20,10 @@ build_profile_likelihood <- function(
   num_attributes = log(ncol(test_parameters), 2),
   priors = NULL
 ) {
-  full_profiles <- create_patterns(num_vars = num_attributes, column_prefix = "A")
+  full_profiles <- create_patterns(
+    num_vars = num_attributes,
+    column_prefix = "A"
+  )
 
   # We get the index of the response
   idx <- .get_matching_rows_index(
@@ -28,8 +31,7 @@ build_profile_likelihood <- function(
     response
   )
 
-  # Iterate over the profiles to get the likelihood.
-  # P(x|a)
+  # Iterate over the profiles to get the likelihood P(x|a)
   profile_likelihood <- apply(
     full_profiles,
     simplify = TRUE,

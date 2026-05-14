@@ -19,5 +19,10 @@ Useful links:
 \author{
 \strong{Maintainer}: Beltrán Pantoja \email{bpp09644@uga.edu}
 
+Authors:
+\itemize{
+  \item Beltrán Pantoja \email{bpp09644@uga.edu}
+}
+
 }
 \keyword{internal}

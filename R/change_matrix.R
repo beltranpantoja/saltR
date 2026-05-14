@@ -7,7 +7,7 @@
 #'
 #'
 #' @param mat Matrix to change
-#' @param what function to apply
+#' @param fun function to apply
 #' @param at vector of indices, logic vector or function to determine the
 #'  rows/columns to be changed.
 #' @param direction should the change be done for the rows or columns.
@@ -15,12 +15,12 @@
 #' @returns A matrix of the same dimension than `mat`.
 #' @export
 #'
-change_matrix <- function(mat, what, at = NULL, direction = "row") {
+change_matrix <- function(mat, fun, at = NULL, direction = "row") {
   # Tranform direction into margin for apply
   direction <- match.arg(direction, c("row", "column"))
   margin <- if (direction == "row") 1 else 2
 
-  # 'what' should return a vector of the same length as the original
+  # 'fun' should return a vector of the same length as the original
   expected_length <- if (margin == 1) ncol(mat) else nrow(mat)
   total_elements <- dim(mat)[margin]
 
@@ -67,8 +67,8 @@ change_matrix <- function(mat, what, at = NULL, direction = "row") {
   # Apply the 'what' transformation validating the length of each application.
   if (length(target_indices) > 0) {
     # We create a wrapper to check the output of 'what' before assignment
-    validated_what <- function(x) {
-      res <- what(x)
+    validated_fun <- function(x) {
+      res <- fun(x)
       if (length(res) != expected_length) {
         stop(sprintf(
           "'what' returned %d elements, but the %s length is %d.",
@@ -80,7 +80,7 @@ change_matrix <- function(mat, what, at = NULL, direction = "row") {
 
     if (margin == 1) {
       # drop = FALSE is vital to keep matrix structure for apply
-      results <- apply(mat[target_indices, , drop = FALSE], 1, validated_what)
+      results <- apply(mat[target_indices, , drop = FALSE], 1, validated_fun)
       # If results is a vector (single row), or matrix (multiple rows)
       # apply with margin 1 returns a transposed result.
       mat[target_indices, ] <- if (length(target_indices) == 1) {
@@ -92,7 +92,7 @@ change_matrix <- function(mat, what, at = NULL, direction = "row") {
       mat[, target_indices] <- apply(
         mat[, target_indices, drop = FALSE],
         2,
-        validated_what
+        validated_fun
       )
     }
   }
@@ -102,13 +102,12 @@ change_matrix <- function(mat, what, at = NULL, direction = "row") {
 }
 
 
-
 # ========================================================================
 # Utility functions for change_matrix
 # ========================================================================
 
 
-#' Utility functions for the `what` and `at` parameters of `change_matrix`.
+#' Utility functions for the `fun` and `at` parameters of `change_matrix`.
 #' @name change_utils
 NULL
 
@@ -128,14 +127,14 @@ NULL
 #' @param high The higher range of complexity. By default is the same as `low`
 #'  meaning it matches the vectors that have that exact complexity.
 #' @export
-is_complex <- function(low, high = low) {
+mat_is_complex <- function(low, high = low) {
   function(row) {
     if (.is_binary_row(row)) {
       complexity <- sum(row > 0)
       all(complexity >= low, complexity <= high)
     } else {
       complexity <- sum(!is.na(row))
-      all(complexity >= low, complexity <= high)
+      all(complexity >= 2**low, complexity <= 2**high)
     }
   }
 }
@@ -143,7 +142,7 @@ is_complex <- function(low, high = low) {
 #' @rdname change_utils
 #' @param attr The number of the attr in the Q-matrix.
 #' @export
-measures_attr <- function(attr) {
+mat_measures_attr <- function(attr) {
   function(row) {
     if (.is_binary_row(row)) {
       row[attr] == 1
@@ -153,35 +152,3 @@ measures_attr <- function(attr) {
   }
 }
 
-
-#' @rdname change_utils
-#' @param num The number of elements to remove.
-#' @param leave_as_zero Boolean. By default is False and the values get
-#'  replaced with NaN, which means the item does not measure that attribute.
-#'  However, in certain circumstances you might want to keep the original
-#'  Q-matrix and just make the effect be 0.
-#' @export
-remove_smallest <- function(num, leave_as_zero = FALSE) {
-  function(row) {
-    # Get non-NA indices. We ignore the intercept
-    non_na_indices <- which(!is.na(row[-1]))
-
-    # Limit the max values to remove
-    if (length(non_na_indices) > num) {
-      stop(
-        "Number of parameters to remove is larger that number of parameters."
-      )
-    }
-
-    # Find the positions of the smallest values among the non-NA set
-    target_sub_indices <- order(row[non_na_indices])[1:num]
-
-    # Map those sub-indices back to the original row positions
-    final_indices <- non_na_indices[target_sub_indices]
-
-    row[final_indices] <- if (leave_as_zero) 0 else NA
-
-    # Return
-    row
-  }
-}

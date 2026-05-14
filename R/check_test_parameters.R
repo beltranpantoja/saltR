@@ -7,30 +7,51 @@
 #' @returns boolean
 #' @export
 #'
-check_test_parameters <- function(test, qmatrix = NULL) {
-  # TODO: Add more information to the error
+check_test_parameters <- function(
+  test,
+  qmatrix = NULL,
+  action = c("error", "warning", "message", "quiet")
+) {
+  action <- match.arg(action)
 
-  test[!is.na(test)] <- 1
-  test[is.na(test)] <- 0
+  # Standardize the input to 0/1 for matching
+  test_binary <- test
+  test_binary[!is.na(test)] <- 1
+  test_binary[is.na(test)] <- 0
 
-  if (is.null(qmatrix)) {
-    K <- log2(ncol(test))
-    full_qmatrix <- create_patterns(K)
-    full_mask <- build_test_parameters(full_qmatrix)
 
-    A <- apply(full_mask, 1, paste, collapse = "")
-    B <- apply(test, 1, paste, collapse = "")
-
-    return(all(B %in% A))
+  expected_params <- if (is.null(qmatrix)) {
+    num_attr <- log2(ncol(test_binary))
+    build_test_parameters(create_patterns(num_attr))
   } else {
-    expected_params <- build_test_parameters(qmatrix)
+    build_test_parameters(qmatrix)
+  }
 
-    # Check if dimensions match first to avoid errors
-    if (!all(dim(test) == dim(expected_params))) {
-      return(FALSE)
-    }
+  if (any(dim(test_binary) != dim(expected_params))) {
+    msg <- sprintf(
+      "Dimension mismatch: test is %dx%d, expected %dx%d.",
+      nrow(test_binary), ncol(test_binary),
+      nrow(expected_params), ncol(expected_params)
+    )
 
-    # Return a single TRUE/FALSE
-    return(all(test == expected_params))
+    # Throw error
+    saltr_emit(msg, "error", class = "dim_mismatch")
+  }
+
+  # 4. Check Values and find "Spots"
+  mismatches <- which(test_binary != expected_params, arr.ind = TRUE)
+
+  if (nrow(mismatches) > 0) {
+    # Format the coordinates for the error message
+    spots <- paste0("(", mismatches[, 1], ", ", mismatches[, 2], ")", collapse = ", ")
+    msg <- paste("Mismatches found at [row, col] coordinates:", spots)
+
+    saltr_emit(msg, action, class = "malformed_test")
+
+    # Return False
+    FALSE
+  } else {
+    # Return False
+    TRUE
   }
 }

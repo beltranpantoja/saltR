@@ -145,8 +145,7 @@ generate_examinees <- function(
   )
 
   invalid <- (
-    (joint_prob > prob_upper_limit) |
-      (joint_prob < prob_lower_limit)) &
+    (joint_prob > prob_upper_limit) | (joint_prob < prob_lower_limit)) &
     upper.tri(joint_prob) # We dont want to double count
 
   messages <- character(0)

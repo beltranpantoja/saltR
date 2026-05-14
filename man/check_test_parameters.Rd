@@ -4,7 +4,11 @@
 \alias{check_test_parameters}
 \title{Check if the test parameters are compatible with a Q-matrix}
 \usage{
-check_test_parameters(test, qmatrix = NULL)
+check_test_parameters(
+  test,
+  qmatrix = NULL,
+  action = c("error", "warning", "message", "quiet")
+)
 }
 \arguments{
 \item{test}{item parameters matrix}

@@ -27,7 +27,7 @@ Let's first create a Q-matrix.
 ```{r}
 library(saltr)
 
-qmatrix <- create_qmatrix(num_attr=3, items_per_type = c(2,1))
+qmatrix <- create_qmatrix(num_attr = 3, items_per_type = c(2, 1))
 qmatrix
 ```
 
@@ -35,20 +35,20 @@ The `create_qmatrix` objective is give us a fast template for a Q-matrix which
 we then can modify. Let's make item 9 measure all attributes.
 
 ```{r}
-qmatrix[9,] <- c(1,1,1) 
+qmatrix[9, ] <- c(1, 1, 1)
 ```
 
 Perfect. So far, so good. Now, we want to create a test that has to be compatible
 with our Q-matrix. This is normally a tricky thing to do, but using `build_test_parameters` the operation is simplified.
 
 ```{r}
-# We pass our qmatrix as an argument 
+# We pass our qmatrix as an argument
 test <- build_test_parameters(qmatrix)
 test
 
-# Item 8 has the intercept 0, the main effects 1 and 3, 
+# Item 8 has the intercept 0, the main effects 1 and 3,
 # and the two-way interaction 1-3
-test[8,]
+test[8, ]
 ```
 
 Because we did not pass any extra arguments, the result of `build_test_parameters` 
@@ -107,7 +107,7 @@ that follows those restrictions.If not possible it will throw an error.
 ```{r, , warning=TRUE, error=TRUE}
 # This will throw an error
 sample_1 <- generate_examinees(
-  1000, 
+  1000,
   total_attrs = 3,
   base_rate = c(.8, .5, .2),
   attr_corr = c(.8, .1, 0),
@@ -116,7 +116,7 @@ sample_1 <- generate_examinees(
 
 # This wont
 sample_2 <- generate_examinees(
-  1000, 
+  1000,
   total_attrs = 3,
   base_rate = c(.8, .5, .2),
   attr_corr = c(.8, .1, 0),
@@ -126,7 +126,7 @@ sample_2 <- generate_examinees(
 # Although it is always better to pass some value for tolerance
 # To get info on the generation.
 sample_3 <- generate_examinees(
-  1000, 
+  1000,
   total_attrs = 3,
   base_rate = c(.8, .5, .2),
   attr_corr = c(.8, .1, 0),
@@ -151,10 +151,10 @@ inadvertently added a second main effect on item 2.
 ```{r, error=TRUE}
 wrong_test <- test
 
-# Now item 2 has a main effect but the interaction 1-2 is NA 
-wrong_test[2,3] <- .5
+# Now item 2 has a main effect but the interaction 1-2 is NA
+wrong_test[2, 3] <- .5
 
-responses <- generate_responses(examinees, wrong_test, qmatrix=qmatrix)
+responses <- generate_responses(examinees, wrong_test, qmatrix = qmatrix)
 ```
 
 And now we can just fit our model.
@@ -165,17 +165,17 @@ Our complete code to start from zero and get simulated responses to a test is
 just a couple of lines!
 
 ```{r}
-qmatrix <- create_qmatrix(num_attr=3, items_per_type = c(2,1))
-qmatrix[9,] <- c(1,1,1) 
+qmatrix <- create_qmatrix(num_attr = 3, items_per_type = c(2, 1))
+qmatrix[9, ] <- c(1, 1, 1)
 
 test <- build_test_parameters(qmatrix, -2, 2, .5)
 test[6, 4] <- 1
 test[7, 3] <- 1
 
 examinees <- generate_examinees(
-  1000, 
+  1000,
   total_attrs = 3,
-  base_rate = .5, 
+  base_rate = .5,
   attr_corr = c(.3, 0, 0)
 )
 

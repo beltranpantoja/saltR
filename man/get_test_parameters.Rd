@@ -14,7 +14,8 @@ show in the table. So, for example, the ACDM model will only return main
 effects. If true this returns the complete table and fills the corresponding
 parameters with 0. This also ensures a consistent order of the parameters.}
 
-\item{pretty_print}{boolean. If true it prints a pretty table. It returns a data frame silently.}
+\item{pretty_print}{boolean. If true it prints a pretty table. It returns a
+data frame silently.}
 
 \item{digits}{rounding digits when printing. The return is not approximated.}
 }

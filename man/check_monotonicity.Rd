@@ -6,12 +6,18 @@
 is useful for when you don't want to force it, but you want to know if the
 model was able to achieve it.}
 \usage{
-check_monotonicity(model, tol = 1e-12)
+check_monotonicity(
+  object,
+  action = c("message", "quiet", "warning", "stop"),
+  tolerance = 1e-09
+)
 }
 \arguments{
-\item{model}{A gdina object}
+\item{object}{Either a a gdina object or a matrix of test_parameters}
 
-\item{tol}{tolerance for difference}
+\item{action}{what to do with the result. By default is a message.}
+
+\item{tolerance}{tolerance for difference}
 }
 \value{
 a boolean and raises a warning

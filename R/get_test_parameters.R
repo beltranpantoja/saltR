@@ -8,7 +8,8 @@
 #'  show in the table. So, for example, the ACDM model will only return main
 #'  effects. If true this returns the complete table and fills the corresponding
 #'  parameters with 0. This also ensures a consistent order of the parameters.
-#' @param pretty_print boolean. If true it prints a pretty table. It returns a data frame silently.
+#' @param pretty_print boolean. If true it prints a pretty table. It returns a
+#'  data frame silently.
 #' @param digits rounding digits when printing. The return is not approximated.
 #'
 #' @returns matrix of item-parameters
@@ -29,28 +30,29 @@ get_test_parameters <- function(
     )
   }
 
-  model.coef <- model$coef
+  # TODO: add the pretty print if interactive
+  model_coef <- model$coef
 
   # We get the model's attributes names in order
-  attr.labels <- colnames(model$attribute.patt.splitted)
+  attr_labels <- colnames(model$attribute.patt.splitted)
 
-  # Each attribute label is changed by a number. So the parameters are normalized.
-  partype.attr <- model.coef[, "partype.attr"]
-  for (i in seq_along(attr.labels)) {
-    partype.attr <- gsub(attr.labels[i], i, partype.attr)
+  # Each attribute label is changed by a number, so parameters are normalized.
+  partype_attr <- model_coef[, "partype.attr"]
+  for (i in seq_along(attr_labels)) {
+    partype_attr <- gsub(attr_labels[i], i, partype_attr)
   }
-  partype.attr[partype.attr == ""] <- "0"
+  partype_attr[partype_attr == ""] <- "0"
 
   # We replace the result of the change in the coef matrix
-  model.coef[, "partype.attr"] <- partype.attr
+  model_coef[, "partype.attr"] <- partype_attr
 
 
   # tapply crosses the item and partype.attr columns to obtain the est values
   item_params <- with(
-    model.coef,
+    model_coef,
     tapply(
       est,
-      list(item, partype.attr),
+      list(item, partype_attr),
       function(x) x
     ) # The identity function allows for the return of NAs
   )

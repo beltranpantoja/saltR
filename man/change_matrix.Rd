@@ -4,12 +4,12 @@
 \alias{change_matrix}
 \title{Change Matrix}
 \usage{
-change_matrix(mat, what, at = NULL, direction = "row")
+change_matrix(mat, fun, at = NULL, direction = "row")
 }
 \arguments{
 \item{mat}{Matrix to change}
 
-\item{what}{function to apply}
+\item{fun}{function to apply}
 
 \item{at}{vector of indices, logic vector or function to determine the
 rows/columns to be changed.}

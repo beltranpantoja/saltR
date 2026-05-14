@@ -59,6 +59,10 @@ test_that("Arguments marginal_attr and which_items works properly in tandem", {
   model <- fit_lcdm(responses, qmatrix)
 
   expect_snapshot(
-    get_probabilities_by_profile(model, marginal_attr = 1, which_items = c(2, 3))
+    get_probabilities_by_profile(
+      model,
+      marginal_attr = 1,
+      which_items = c(2, 3)
+    )
   )
 })

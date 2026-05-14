@@ -20,10 +20,10 @@ build_qmatrix <- function(
 
   # First figure out number of attributes
   cols <- ncol(test_parameters)
-  K <- log2(cols)
+  num_attr <- log2(cols)
 
   # Do a mapping from all possible profiles
-  patt <- create_patterns(K)
+  patt <- create_patterns(num_attr)
 
   # This is our reference to map to the patt matrix
   # That way we rebuild the test row by row
@@ -41,7 +41,12 @@ build_qmatrix <- function(
     )
 
     if (length(match) == 0) {
-      stop(sprintf("Row %d in test could not be matched. Check if it is valid", i))
+      stop(
+        sprintf(
+          "Row %d in test could not be matched. Check if it is valid",
+          i
+        )
+      )
     }
 
     match[1]
@@ -53,7 +58,7 @@ build_qmatrix <- function(
 
   # Giving names to the qmatrix rows and columns
   if (is.null(attributes_names)) {
-    attributes_names <- paste0("Attr", seq_len(K))
+    attributes_names <- paste0("Attr", seq_len(num_attr))
   }
   if (is.null(item_names)) {
     item_names <- paste0("Item", seq_len(dim(qmatrix)[1]))

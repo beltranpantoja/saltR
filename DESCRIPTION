@@ -11,19 +11,22 @@ URL: https://beltranpantoja.github.io/saltR/,
 Depends: 
     R (>= 3.5)
 Imports:
+    rlang,
     bindata,
     CDM,
     ROI,
     stats,
     utils
 Suggests: 
+    styler,
     knitr,
     rmarkdown,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    lintr
 VignetteBuilder: 
     knitr
 Config/testthat/edition: 3
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.2
+Config/roxygen2/version: 8.0.0

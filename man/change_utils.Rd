@@ -2,16 +2,13 @@
 % Please edit documentation in R/change_matrix.R
 \name{change_utils}
 \alias{change_utils}
-\alias{is_complex}
-\alias{measures_attr}
-\alias{remove_smallest}
-\title{Utility functions for the \code{what} and \code{at} parameters of \code{change_matrix}.}
+\alias{mat_is_complex}
+\alias{mat_measures_attr}
+\title{Utility functions for the \code{fun} and \code{at} parameters of \code{change_matrix}.}
 \usage{
-is_complex(low, high = low)
+mat_is_complex(low, high = low)
 
-measures_attr(attr)
-
-remove_smallest(num, leave_as_zero = FALSE)
+mat_measures_attr(attr)
 }
 \arguments{
 \item{low}{The lower range of complexity.}
@@ -20,14 +17,7 @@ remove_smallest(num, leave_as_zero = FALSE)
 meaning it matches the vectors that have that exact complexity.}
 
 \item{attr}{The number of the attr in the Q-matrix.}
-
-\item{num}{The number of elements to remove.}
-
-\item{leave_as_zero}{Boolean. By default is False and the values get
-replaced with NaN, which means the item does not measure that attribute.
-However, in certain circumstances you might want to keep the original
-Q-matrix and just make the effect be 0.}
 }
 \description{
-Utility functions for the \code{what} and \code{at} parameters of \code{change_matrix}.
+Utility functions for the \code{fun} and \code{at} parameters of \code{change_matrix}.
 }
