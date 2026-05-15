@@ -11,13 +11,13 @@
 #'
 check_monotonicity <- function(
   object,
-  action = c("message", "quiet", "warning", "stop"),
+  action = c("error", "warning", "message", "quiet"),
   tolerance = 1e-9
 ) {
   action <- match.arg(action)
 
   # If the passed object is gdina, then we need to extract the parameters
-  if (class(object) == "gdina") {
+  if (inherits(object, "gdina")) {
     test <- get_test_parameters(object)
   } else {
     test <- object
@@ -30,67 +30,65 @@ check_monotonicity <- function(
   full_profiles <- create_patterns(num_attr)
   probs <- generate_responses(full_profiles, test, get_probs = TRUE)
 
-
-  num_profiles <- nrow(full_profiles)
+  attr_counts <- rowSums(full_profiles)
 
   # Setup violations storage
   violations <- c()
 
+  # Count
   for (k in seq_len(num_attr) - 1) {
-    # We select profiles with 'k' and 'k+1' attributes
-    num_attr_by_profile <- rowSums(full_profiles)
-    low_indices <- which(num_attr_by_profile == k)
-    high_indices <- which(num_attr_by_profile == k + 1)
+    low_idx <- which(attr_counts == k)
+    high_idx <- which(attr_counts == k + 1)
 
-    for (i in low_indices) {
-      for (j in high_indices) {
-        # We only compare profiles that are a subset og the other
-        if (all(full_profiles[j, ] >= full_profiles[i, ])) {
-          # Check monotonicity on the items
-          if (any(probs[j, ] < (probs[i, ] - tolerance))) {
-            # If we detect a violation we register the profiles
-            profile_low <- full_profiles[i, ] |> paste(collapse = "")
-            profile_high <- full_profiles[j, ] |> paste(collapse = "")
-
-            # Identify which items caused the violation
-            idx <- which(probs[j, ] < probs[i, ])
-            item_names <- colnames(probs)[idx]
-            items_str <- paste(item_names, collapse = ", ")
-
-
-            msg <- sprintf(
-              "Profiles %s and %s on: %s",
-              profile_low, profile_high, items_str
-            )
-
-            violations <- c(violations, msg)
-          }
-        }
+    for (i in low_idx) {
+      for (j in high_idx) {
+        res <- .get_monotonicity_violation(i, j, full_profiles, probs, tolerance)
+        violations <- c(violations, res)
       }
     }
   }
 
-  is_monotonic <- length(violations) == 0
 
-  if (!is_monotonic) {
-    full_msg <- paste(
-      c(
-        "Monotonicity violations found. Consider using mono.constr=TRUE.",
-        violations
-      ),
-      collapse = "\n"
-    )
+  if (length(violations) > 0) {
+    header <- "Monotonicity violations found. Consider using mono.constr=TRUE."
 
-    switch(action,
-      message = message(full_msg),
-      warning = warning(full_msg, call. = FALSE),
-      stop    = stop(full_msg, call. = FALSE),
-      quiet   = NULL # Do nothing
+    # Summary: Show first 5 violations to prevent console flooding
+    display_viol <- head(violations, 5)
+    if (length(violations) > 5) {
+      display_viol <- c(display_viol, sprintf("... and %d more.", length(violations) - 5))
+    }
+
+    full_msg <- paste(c(header, display_viol), collapse = "\n")
+
+    saltr_emit(
+      msg = full_msg,
+      level = action,
+      class = "fail_monotonicity",
+      all_violations = violations # Keep full list in the error object
     )
-  } else if (action != "quiet") {
-    message("The monotonicity assumption holds.")
   }
 
-  # Return the boolean invisibly to allow its use in if blocks
-  invisible(is_monotonic)
+  invisible(length(violations) == 0)
+}
+
+
+#' @noRd
+.get_monotonicity_violation <- function(i, j, full_profiles, probs, tolerance) {
+  # Logic: Profile j must be a superset of profile i
+  if (!all(full_profiles[j, ] >= full_profiles[i, ])) {
+    return(NULL)
+  }
+
+  # Check monotonicity: prob(higher) should be >= prob(lower) - tolerance
+  violating_items <- which(probs[j, ] < (probs[i, ] - tolerance))
+
+  if (length(violating_items) > 0) {
+    p_low <- paste(full_profiles[i, ], collapse = "")
+    p_high <- paste(full_profiles[j, ], collapse = "")
+    items <- paste(colnames(probs)[violating_items], collapse = ", ")
+
+    return(sprintf("Profiles %s and %s on: %s", p_low, p_high, items))
+  }
+
+  return(NULL)
 }

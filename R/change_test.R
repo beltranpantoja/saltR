@@ -21,9 +21,8 @@ change_test <- function(
   values = NULL,
   fun = NULL
 ) {
-  if (!check_test_parameters(test_parameters)) {
-    stop("Test parameters are malformed. Check your input.")
-  }
+  # First we check the test_parameters
+  check_test_parameters(test_parameters)
 
   num_attr <- log(ncol(test_parameters), 2)
 
@@ -72,12 +71,12 @@ change_test <- function(
 
 
   # Now that we have the indices we set the values.
-  target_cells_mask <- !is.na(test[items_idx, idx, drop = FALSE])
+  target_cells_mask <- !is.na(test_parameters[items_idx, idx, drop = FALSE])
   num_to_replace <- sum(target_cells_mask)
 
   if (num_to_replace == 0) {
     warning("The combination of arguments returned no matches.")
-    return(test)
+    return(test_parameters)
   }
 
   if (!is.null(values) && !is.null(fun)) {
@@ -87,7 +86,7 @@ change_test <- function(
   if (!is.null(fun)) {
     if (!is.function(fun)) stop("'fun' must be a function.")
     # Apply function to the specific non-NA values
-    new_values <- fun(test[, idx][target_cells_mask])
+    new_values <- fun(test_parameters[, idx][target_cells_mask])
     if (length(new_values) != length(num_to_replace)) {
       stop(sprintf(
         "The function returned %d values, only %d values were expected",
@@ -95,7 +94,7 @@ change_test <- function(
         length(num_to_replace)
       ))
     }
-    test[items_idx, idx][target_cells_mask] <- new_values
+    test_parameters[items_idx, idx][target_cells_mask] <- new_values
   } else if (!is.null(values)) {
     # check values are numbers
     if (!is.numeric(values)) {
@@ -111,7 +110,7 @@ change_test <- function(
         num_to_replace
       ))
       # Only take the first values
-      test[items_idx, idx][target_cells_mask] <- values[seq_along(num_to_replace)]
+      test_parameters[items_idx, idx][target_cells_mask] <- values[seq_along(num_to_replace)]
     } else if (length(values) < num_to_replace) {
       stop(sprintf(
         "Number of values (%d) is less than slots to fill (%d).",
@@ -119,10 +118,10 @@ change_test <- function(
         num_to_replace
       ))
     } else {
-      test[items_idx, idx][target_cells_mask] <- values
+      test_parameters[items_idx, idx][target_cells_mask] <- values
     }
   }
 
   # Return full test
-  test
+  test_parameters
 }

@@ -4,12 +4,7 @@
 \alias{build_profile_likelihood}
 \title{Build profiles likelihood and posterior probabilities for a given response.}
 \usage{
-build_profile_likelihood(
-  test_parameters,
-  response,
-  num_attributes = log(ncol(test_parameters), 2),
-  priors = NULL
-)
+build_profile_likelihood(test_parameters, response, priors = NULL)
 }
 \arguments{
 \item{test_parameters}{a Matrix containing the items and their parameters as
@@ -18,9 +13,6 @@ using \code{get_test_parameters} it should be extracted using the parameter
 \code{complete=TRUE}.}
 
 \item{response}{numeric vector corresponding to the response pattern.}
-
-\item{num_attributes}{The number of attributes in the test. It will be
-inferred from the test.}
 
 \item{priors}{profiles prior distribution. If NULL it will be assumed to be
 uniformly distributed.}

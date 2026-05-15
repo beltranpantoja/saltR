@@ -22,11 +22,8 @@ generate_responses <- function(
   qmatrix = NULL
 ) {
   # First we check that the passed test is valid
-  valid <- check_test_parameters(test, qmatrix = qmatrix)
+  check_test_parameters(test, qmatrix = qmatrix)
 
-  if (valid == FALSE) {
-    stop("The test is not properly formed")
-  }
 
   probs <- .get_prob_matrix(examinees, test)
 

@@ -20,7 +20,7 @@ a matrix of profiles and the probability of a correct response for
 all items.
 }
 \description{
-It works by extraxcting the test parameters with \code{get_test_parameters} and
+It works by extracting the test parameters with \code{get_test_parameters} and
 then passing that to the \code{generate_responses(get_probs=TRUE)} with all
 possible mastery patterns to get the expected probabilities.
 }

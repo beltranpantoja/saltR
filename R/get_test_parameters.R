@@ -1,9 +1,5 @@
-#' Returns a matrix item-parameters from model
+#' @rdname get_family
 #'
-#' This extracts a model's item parameters as a matrix If `pretty_print` is
-#'  true, then it also prints a pretty version of the table.
-#'
-#' @param model a GDINA object. It has to be logit link function.
 #' @param complete If the model only estimated some parameters this will not
 #'  show in the table. So, for example, the ACDM model will only return main
 #'  effects. If true this returns the complete table and fills the corresponding
@@ -12,9 +8,11 @@
 #'  data frame silently.
 #' @param digits rounding digits when printing. The return is not approximated.
 #'
-#' @returns matrix of item-parameters
-#' @export
+#' @returns a [test_parameters] object from the parameters estimated by the
+#'  model, which is just an extension of the base [base::matrix] class.
 #'
+#' @family test parameters functions
+#' @export
 get_test_parameters <- function(
   model,
   complete = TRUE,

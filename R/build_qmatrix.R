@@ -22,6 +22,17 @@ build_qmatrix <- function(
   cols <- ncol(test_parameters)
   num_attr <- log2(cols)
 
+  if (num_attr %% 1 != 0) {
+    msg <- sprintf(
+      "Got %d columns, the number of columns must be a power of 2.", cols
+    )
+    saltr_emit(
+      msg = msg,
+      level = "error",
+      class = "invalid_column_count"
+    )
+  }
+
   # Do a mapping from all possible profiles
   patt <- create_patterns(num_attr)
 
@@ -34,22 +45,11 @@ build_qmatrix <- function(
 
   # We iterate over the rows.
   matches <- vapply(seq_along(item_parameters), function(i) {
-    match <- which(
-      apply(
-        patt_parameters, 1, function(row) all(row == item_parameters[[i]])
-      )
+    parameters_to_q_vector(
+      item_param = item_parameters[[i]],
+      reference_patt = patt_parameters,
+      index = i
     )
-
-    if (length(match) == 0) {
-      stop(
-        sprintf(
-          "Row %d in test could not be matched. Check if it is valid",
-          i
-        )
-      )
-    }
-
-    match[1]
   }, integer(1))
 
   # We construct the qmatrix
@@ -68,4 +68,28 @@ build_qmatrix <- function(
 
   # We return the qmatrix
   qmatrix
+}
+
+
+#' Find match for a single item parameter set
+#' @noRd
+parameters_to_q_vector <- function(item_param, reference_patt, index) {
+  # logical vector of which rows in reference_patt match item_param
+  matches_found <- apply(reference_patt, 1, function(row) all(row == item_param))
+  match_idx <- which(matches_found)
+
+  if (length(match_idx) == 0) {
+    saltr_emit(
+      msg = sprintf(
+        "Item %d in test could not be transformed to a q-vector.",
+        index
+      ),
+      level = "error",
+      class = "parameter_match_error",
+      row_index = index
+    )
+  }
+
+  # Return the first match index
+  match_idx[1]
 }

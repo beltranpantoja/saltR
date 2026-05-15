@@ -67,5 +67,5 @@ build_test_parameters <- function(
   out[mask == 0] <- NA
 
   # Return
-  out
+  as_test_parameters(out)
 }

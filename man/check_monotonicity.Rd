@@ -8,7 +8,7 @@ model was able to achieve it.}
 \usage{
 check_monotonicity(
   object,
-  action = c("message", "quiet", "warning", "stop"),
+  action = c("error", "warning", "message", "quiet"),
   tolerance = 1e-09
 )
 }

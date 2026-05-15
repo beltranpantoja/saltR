@@ -14,44 +14,67 @@ check_test_parameters <- function(
 ) {
   action <- match.arg(action)
 
-  # Standardize the input to 0/1 for matching
-  test_binary <- test
-  test_binary[!is.na(test)] <- 1
-  test_binary[is.na(test)] <- 0
+  # We try and build a Q-matrix from the test
+  built_qmatrix <- rlang::try_fetch(
+    build_qmatrix(test),
 
+    # Catch the column error
+    invalid_column_count = function(cnd) {
+      new_msg <- paste("Failed to validate test parameters:", cnd$message)
+      saltr_emit(new_msg, level = action, parent = cnd, class = "check_fail_cols")
+    },
 
-  expected_params <- if (is.null(qmatrix)) {
-    num_attr <- log2(ncol(test_binary))
-    build_test_parameters(create_patterns(num_attr))
-  } else {
-    build_test_parameters(qmatrix)
-  }
+    # Catch the item transformation error
+    parameter_match_error = function(cnd) {
+      new_msg <- sprintf(
+        "Validation failed at item %d. The parameters are malformed.",
+        cnd$row_index
+      )
+      saltr_emit(new_msg, level = action, parent = cnd, class = "check_fail_row")
+    }
+  )
 
-  if (any(dim(test_binary) != dim(expected_params))) {
-    msg <- sprintf(
-      "Dimension mismatch: test is %dx%d, expected %dx%d.",
-      nrow(test_binary), ncol(test_binary),
-      nrow(expected_params), ncol(expected_params)
-    )
+  # If there wasn't any error building a qmatrix
 
-    # Throw error
-    saltr_emit(msg, "error", class = "dim_mismatch")
-  }
+  # We can now check against the passed qmatrix
+  if (!is.null(qmatrix)) {
+    # Check dimensions first
+    if (!all(dim(built_qmatrix) == dim(qmatrix))) {
+      msg <- sprintf(
+        "Provided Q-matrix is %dx%d, expected a Q-matrix of %dx%d.",
+        nrow(qmatrix), ncol(qmatrix),
+        nrow(built_qmatrix), ncol(built_qmatrix)
+      )
+      saltr_emit(
+        msg,
+        level = action,
+        class = "check_fail_dimensions"
+      )
+    }
 
-  # 4. Check Values and find "Spots"
-  mismatches <- which(test_binary != expected_params, arr.ind = TRUE)
+    # Find if there's any mismatch
+    mismatches <- which(built_qmatrix != qmatrix, arr.ind = TRUE)
 
-  if (nrow(mismatches) > 0) {
-    # Format the coordinates for the error message
-    spots <- paste0("(", mismatches[, 1], ", ", mismatches[, 2], ")", collapse = ", ")
-    msg <- paste("Mismatches found at [row, col] coordinates:", spots)
+    if (nrow(mismatches) > 0) {
+      # Extract unique row numbers
+      failed_rows <- unique(mismatches[, "row"])
 
-    saltr_emit(msg, action, class = "malformed_test")
+      # Format for the message (e.g., "1, 4, 5") and limit the length.
+      rows_str <- paste(head(failed_rows, 5), collapse = ", ")
+      if (length(failed_rows) > 5) rows_str <- paste0(rows_str, "...")
 
-    # Return False
-    FALSE
-  } else {
-    # Return False
-    TRUE
+      msg <- sprintf(
+        "Test parameters don't match the provided qmatrix in item(s): %s.",
+        rows_str
+      )
+
+      # Emit the error/warning
+      saltr_emit(
+        msg = msg,
+        level = action,
+        class = "qmatrix_mismatch",
+        failed_rows = failed_rows
+      )
+    }
   }
 }

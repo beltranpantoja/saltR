@@ -5,8 +5,6 @@
 #'  using `get_test_parameters` it should be extracted using the parameter
 #'  `complete=TRUE`.
 #' @param response numeric vector corresponding to the response pattern.
-#' @param num_attributes The number of attributes in the test. It will be
-#'  inferred from the test.
 #' @param priors profiles prior distribution. If NULL it will be assumed to be
 #'  uniformly distributed.
 #'
@@ -17,12 +15,18 @@
 build_profile_likelihood <- function(
   test_parameters,
   response,
-  num_attributes = log(ncol(test_parameters), 2),
   priors = NULL
 ) {
+  # Get the item labels
+  item_labels <-
+    rownames(test_parameters) %||% paste0("I", seq_len(nrow(test_parameter)))
+
+
+  num_attributes <- log(ncol(test_parameters), 2)
+
   full_profiles <- create_patterns(
     num_vars = num_attributes,
-    column_prefix = "A"
+    column_labels = item_labels
   )
 
   # We get the index of the response
