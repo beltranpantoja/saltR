@@ -53,7 +53,7 @@ check_monotonicity <- function(
     header <- "Monotonicity violations found. Consider using mono.constr=TRUE."
 
     # Summary: Show first 5 violations to prevent console flooding
-    display_viol <- head(violations, 5)
+    display_viol <- utils::head(violations, 5)
     if (length(violations) > 5) {
       display_viol <- c(display_viol, sprintf("... and %d more.", length(violations) - 5))
     }

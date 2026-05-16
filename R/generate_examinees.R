@@ -1,5 +1,7 @@
 #' Generate sample of examinees
 #'
+#' @rdname generate_family
+#'
 #' @param sample_size How many examinees to generate
 #' @param total_attrs How many attributes are in the sample
 #' @param base_rate Base rate per attribute (or one if it's the same for all)

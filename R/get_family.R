@@ -1,5 +1,6 @@
-#' Get_* Functions
+#' get_* Functions
 #'
+#' @description
 #' The `get_*` functions take as a first argument a fitted GDINA model and
 #'  return a matrix to simplify piping operations.
 #'

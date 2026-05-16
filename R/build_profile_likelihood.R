@@ -19,7 +19,7 @@ build_profile_likelihood <- function(
 ) {
   # Get the item labels
   item_labels <-
-    rownames(test_parameters) %||% paste0("I", seq_len(nrow(test_parameter)))
+    rownames(test_parameters) %||% paste0("I", seq_len(nrow(test_parameters)))
 
 
   num_attributes <- log(ncol(test_parameters), 2)

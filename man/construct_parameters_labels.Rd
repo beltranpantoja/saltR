@@ -9,7 +9,9 @@ construct_parameters_labels(attr_labels, null_profile = "0", collapse = "-")
 \arguments{
 \item{attr_labels}{vector with the labels of each attribute}
 
-\item{null_profile}{single character vector for the null profile (all zeroes)}
+\item{null_profile}{character for the null profile (all zeroes)}
+
+\item{collapse}{character to use when collapsing the attributes.}
 }
 \value{
 a vector with parameters

@@ -51,7 +51,8 @@
 #'  possible parameters.
 #'
 #' @param attr_labels vector with the labels of each attribute
-#' @param null_profile single character vector for the null profile (all zeroes)
+#' @param null_profile character for the null profile (all zeroes)
+#' @param collapse character to use when collapsing the attributes.
 #'
 #' @returns a vector with parameters
 #'

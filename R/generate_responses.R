@@ -1,9 +1,6 @@
 #' Generate responses to a test
 #'
-#' Given a Q-matrix and a sample of respondents this function returns a
-#'  simulated
-#' response matrix. Items parameter will automatically be mapped to the right
-#'  attribute.
+#' @rdname generate_family
 #'
 #' @param examinees Binary matrix of respondents
 #' @param test matrix of items parameters

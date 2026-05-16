@@ -1,10 +1,11 @@
 #' Check if the test parameters are compatible with a Q-matrix
 #'
-#' @param test item parameters matrix
-#' @param qmatrix Optional. If no qmatrix is passed, then it checks that it is
-#'  compatible for some qmatrix
+#' @param test item parameters matrix.
+#' @param qmatrix Optional. If no Q-matrix is passed, then it checks that it is
+#'  compatible for some Q-matrix.
+#' @param action What to do if the test fails the check.
 #'
-#' @returns boolean
+#' @returns Boolean
 #' @export
 #'
 check_test_parameters <- function(
@@ -60,7 +61,7 @@ check_test_parameters <- function(
       failed_rows <- unique(mismatches[, "row"])
 
       # Format for the message (e.g., "1, 4, 5") and limit the length.
-      rows_str <- paste(head(failed_rows, 5), collapse = ", ")
+      rows_str <- paste(utils::head(failed_rows, 5), collapse = ", ")
       if (length(failed_rows) > 5) rows_str <- paste0(rows_str, "...")
 
       msg <- sprintf(

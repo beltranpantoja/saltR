@@ -1,7 +1,7 @@
 Type: Package
 Package: saltr
 Title: Simulation and Leaplab Tools in R
-Version: 0.3.0
+Version: 0.4.0
 Authors@R: 
     person("Beltrán", "Pantoja", , "bpp09644@uga.edu", role = c("aut", "cre"))
 Description: Simulation And Leaplab Tools in R.
@@ -11,22 +11,21 @@ URL: https://beltranpantoja.github.io/saltR/,
 Depends: 
     R (>= 3.5)
 Imports:
-    rlang,
     bindata,
     CDM,
+    insight,
+    rlang,
     ROI,
     stats,
     utils
 Suggests: 
-    styler,
     knitr,
     rmarkdown,
-    testthat (>= 3.0.0),
-    lintr
+    testthat (>= 3.0.0)
 VignetteBuilder: 
     knitr
+Config/roxygen2/version: 8.0.0
 Config/testthat/edition: 3
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-Config/roxygen2/version: 8.0.0

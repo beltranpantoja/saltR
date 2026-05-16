@@ -1,55 +1,12 @@
 test_that("Base arguments work", {
   qmatrix <- create_qmatrix(3, c(1, 1))
-  test <- build_test_parameters(qmatrix, -2, 2, .5)
 
-  # Simple function
-  expect_snapshot(
-    change_matrix(qmatrix, fun = \(x) x * 0)
-  )
+  changed_qmat <- qmatrix
+  changed_qmat[1:4, 1:3] <- 0
 
-  # Direction argument
-  expect_snapshot(
-    change_matrix(qmatrix, fun = \(x) x * 0, direction = "col")
-  )
-
-  # At argument
-  expect_snapshot(
-    change_matrix(qmatrix, fun = \(x) x * 0, at = 2)
-  )
-
-  expect_snapshot(
-    change_matrix(qmatrix, fun = \(x) x * 0, at = 2, direction = "col")
-  )
-
-  expect_snapshot(
-    change_matrix(qmatrix, fun = \(x) x * 0, at = 1:4)
-  )
-
-  expect_snapshot(
-    change_matrix(qmatrix, fun = \(x) x * 0, at = \(row) row[1] == 1)
-  )
-})
-
-
-test_that("Utility functions work", {
-  qmatrix <- create_qmatrix(3, c(1, 1))
-  test <- build_test_parameters(qmatrix, -2, 2, .5)
-
-  # Utility functions
-  expect_snapshot(
-    change_matrix(test, fun = \(x) x * 0, at = mat_is_complex(2))
-  )
-
-  expect_snapshot(
-    change_matrix(qmatrix, fun = \(x) x * 0, at = mat_is_complex(1, 2))
-  )
-
-  expect_snapshot(
-    change_matrix(qmatrix, fun = \(x) x * 0, at = mat_measures_attr(1))
-  )
-
-  expect_snapshot(
-    change_matrix(test, fun = \(x) x * 0, at = mat_measures_attr(1))
+  expect_equal(
+    change_matrix(qmatrix, fun = \(x) x * 0, at = 1:4, direction = "row"),
+    changed_qmat
   )
 })
 

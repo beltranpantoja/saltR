@@ -3,28 +3,72 @@
 \name{test_parameters}
 \alias{test_parameters}
 \alias{as_test_parameters}
-\alias{pretty_print}
+\alias{print.test_parameters}
+\alias{write_test_parameters}
+\alias{read_test_parameters}
 \title{Test parameters}
 \usage{
 as_test_parameters(x)
 
-pretty_print(test_parameters, digits = 3, prefix = NULL)
+\method{print}{test_parameters}(x, digits = 2, prefix = NULL, ...)
+
+write_test_parameters(
+  test_parameters,
+  path = NULL,
+  keep_item_labels = TRUE,
+  ignore_check = FALSE,
+  safe_column_names = TRUE,
+  replace_na = "",
+  ...
+)
+
+read_test_parameters(path, monotonicity_check = TRUE, ...)
 }
 \arguments{
 \item{x}{A matrix or a numeric data.frame.}
-
-\item{test_parameters}{matrix to print}
 
 \item{digits}{number of rounding digits}
 
 \item{prefix}{prefix for the columns. By default, uses the Greek letter
 lambda in interactive sessions.}
+
+\item{...}{Extra arguments to be passed to \code{read.csv}.}
+
+\item{test_parameters}{matrix to print}
+
+\item{path}{Path of the .csv file with the test parameters.}
+
+\item{keep_item_labels}{Write the label of the item in the first column.}
+
+\item{ignore_check}{Skip the checking of the test parameters.}
+
+\item{safe_column_names}{Should the labels of the attributes be rewritten?}
+
+\item{replace_na}{String to use when replacing the NA values.}
+
+\item{monotonicity_check}{Check that the test parameters are monotone on
+profiles using \code{\link[=check_monotonicity]{check_monotonicity()}}.}
 }
 \value{
 the passed test_parameters with no change
+
+A matrix of the test parameters.
 }
 \description{
 A \code{test_parameters} object is a matrix used to store item/test parameters
 with enhanced printing and validation.
+}
+\examples{
+## We first create a test to save
+qmatrix <- create_qmatrix(3, c(1, 1))
+simple_test <- build_test_parameters(qmatrix, -2, 2, 1, 1)
+tf <- tempfile(fileext = ".csv")
+
+### Standard use
+write_test_parameters(simple_test, "some_test_parameters")
+
+### This will get saved as "simple_test.csv"
+write_test_parameters(simple_test)
+
 }
 \concept{test parameter objects}

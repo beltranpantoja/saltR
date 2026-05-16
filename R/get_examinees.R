@@ -35,7 +35,7 @@ get_examinees <- function(model, method = c("map", "mle")) {
 
   # Dafult to the pattern names
   if (!is.null(labels)) {
-    labels <- mod$subj.pattern[, "pattern"]
+    labels <- model$subj.pattern[, "pattern"]
   }
 
   colnames(mat) <- labels

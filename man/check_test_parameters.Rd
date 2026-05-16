@@ -11,13 +11,15 @@ check_test_parameters(
 )
 }
 \arguments{
-\item{test}{item parameters matrix}
+\item{test}{item parameters matrix.}
 
-\item{qmatrix}{Optional. If no qmatrix is passed, then it checks that it is
-compatible for some qmatrix}
+\item{qmatrix}{Optional. If no Q-matrix is passed, then it checks that it is
+compatible for some Q-matrix.}
+
+\item{action}{What to do if the test fails the check.}
 }
 \value{
-boolean
+Boolean
 }
 \description{
 Check if the test parameters are compatible with a Q-matrix
