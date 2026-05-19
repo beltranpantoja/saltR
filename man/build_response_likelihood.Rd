@@ -2,21 +2,40 @@
 % Please edit documentation in R/build_response_likelihood.R
 \name{build_response_likelihood}
 \alias{build_response_likelihood}
-\title{Create the likelihood matrix of all possible response given a profile.}
+\title{Create the likelihood matrix of all possible responses for a set of profiles}
 \usage{
-build_response_likelihood(test_parameters, profile)
+build_response_likelihood(test_parameters, profiles = NULL, priors = NULL)
 }
 \arguments{
 \item{test_parameters}{a Matrix containing the items and their parameters as
-created by \code{build_test_parameters}. If the test is extracted from a model
-using \code{get_test_parameters} it should be extracted using the parameter
-\code{complete=TRUE}.}
+created by \code{build_test_parameters}.}
 
-\item{profile}{numeric vector corresponding to the assumed profile.}
+\item{profiles}{Vector or matrix with the assumed profiles. If \code{NULL}, then
+it assumes all possible profiles which makes the result be the likelihood
+of the response marginal on all attributes (i.e. \eqn{P(x)}{P(x)}).}
+
+\item{priors}{The priors are the values of \eqn{P(\bold{\alpha}_i)}. Used when
+\code{profiles} is a matrix. By default assumes all are equally likely.}
 }
 \value{
 a matrix
 }
 \description{
-Create the likelihood matrix of all possible response given a profile.
+Create the likelihood matrix of all possible responses for a set of profiles
+}
+\details{
+This function returns the likelihood of a given response given a profile:
+\eqn{P(\bold{x}\mid\bold{\alpha})}. If more than one profile is passed,
+then it returns the probability of the responses conditional on the union of
+the profiles:
+\deqn{
+   P(\bold{x} \mid \bigcup_{i}^{k} \bold{\alpha}_i)
+     = \dfrac{
+       \sum_{i}^{k} P(\bold{x}\mid\bold{\alpha}_i) P(\bold{\alpha}_i)
+     }{
+       \sum_{i}^{k} P(\bold{\alpha}_i)
+     }
+   }
+If no profiles are passed then it's assumed it's marginal on all profiles,
+which is equivalent to \eqn{P(\bold{x})}.
 }

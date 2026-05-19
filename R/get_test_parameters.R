@@ -1,30 +1,19 @@
 #' @rdname get_family
 #'
-#' @param complete If the model only estimated some parameters this will not
-#'  show in the table. So, for example, the ACDM model will only return main
-#'  effects. If true this returns the complete table and fills the corresponding
-#'  parameters with 0. This also ensures a consistent order of the parameters.
-#' @param pretty_print boolean. If true it prints a pretty table. It returns a
-#'  data frame silently.
-#' @param digits rounding digits when printing. The return is not approximated.
-#'
 #' @returns a [test_parameters] object from the parameters estimated by the
 #'  model, which is just an extension of the base [base::matrix] class.
 #'
 #' @family test parameters functions
 #' @export
 get_test_parameters <- function(
-  model,
-  complete = TRUE,
-  pretty_print = TRUE,
-  digits = 2
+  model
 ) {
   # TODO: This could down the line also give the SE
 
   # Ensuring only logit linkfct
   if (model$linkfct != "logit") {
-    stop(
-      "only implemented for models with link logit, not: ", model$linkfct
+    saltr_emit(
+      "only implemented for models with link logit, not {.var model$linkfct}"
     )
   }
 
@@ -66,24 +55,19 @@ get_test_parameters <- function(
 
   item_params <- item_params[items_order, params_order]
 
-  if (complete == TRUE) {
-    mask <- build_test_parameters(model$q.matrix)
 
-    idx <- which(!colnames(mask) %in% colnames(item_params))
-    columns_to_add <- mask[, idx, drop = FALSE]
+  # We make the test parameters complete
+  mask <- build_test_parameters(model$q.matrix)
 
-    columns_to_add[columns_to_add == 0] <- NA
-    columns_to_add[columns_to_add == 1] <- 0
+  idx <- which(!colnames(mask) %in% colnames(item_params))
+  columns_to_add <- mask[, idx, drop = FALSE]
 
-    item_params <- cbind(item_params, columns_to_add)
-    item_params[, colnames(mask)]
-  }
+  columns_to_add[columns_to_add == 0] <- NA
+  columns_to_add[columns_to_add == 1] <- 0
 
-
-  if (pretty_print == TRUE) {
-    pretty_print(item_params, digits = digits)
-  }
+  item_params <- cbind(item_params, columns_to_add)
+  item_params[, colnames(mask)]
 
   # Return
-  item_params
+  as_test_parameters(item_params)
 }

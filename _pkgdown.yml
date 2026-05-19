@@ -43,10 +43,3 @@ reference:
   desc: Data included in the package
 - contents:
   - data.item_influence
-
-
-articles:
-- title: Examples
-  navbar:
-  contents:
-  - run_simulation

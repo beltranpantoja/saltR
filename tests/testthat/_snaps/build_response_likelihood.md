@@ -1,4 +1,4 @@
-# Returns expected shape
+# Basic call
 
     Code
       build_response_likelihood(test, c(0, 0, 0))

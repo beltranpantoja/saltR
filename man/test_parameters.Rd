@@ -10,7 +10,7 @@
 \usage{
 as_test_parameters(x)
 
-\method{print}{test_parameters}(x, digits = 2, prefix = NULL, ...)
+\method{print}{test_parameters}(x, digits = 2, ignore_empty_cols = FALSE, prefix = NULL, ...)
 
 write_test_parameters(
   test_parameters,
@@ -28,6 +28,9 @@ read_test_parameters(path, monotonicity_check = TRUE, ...)
 \item{x}{A matrix or a numeric data.frame.}
 
 \item{digits}{number of rounding digits}
+
+\item{ignore_empty_cols}{Boolean. Should columns with no parameters be
+printed?}
 
 \item{prefix}{prefix for the columns. By default, uses the Greek letter
 lambda in interactive sessions.}
@@ -65,10 +68,10 @@ simple_test <- build_test_parameters(qmatrix, -2, 2, 1, 1)
 tf <- tempfile(fileext = ".csv")
 
 ### Standard use
-write_test_parameters(simple_test, "some_test_parameters")
+write_test_parameters(simple_test, tf)
 
 ### This will get saved as "simple_test.csv"
-write_test_parameters(simple_test)
+# write_test_parameters(simple_test)
 
 }
 \concept{test parameter objects}

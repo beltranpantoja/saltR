@@ -24,3 +24,11 @@ posterior
 \description{
 Build profiles likelihood and posterior probabilities for a given response.
 }
+\details{
+This function returns the likelihood of a profile given a response:
+\eqn{P(\bold{\alpha}\mid\bold{x})}.
+
+It returns the used prior (\eqn{P(\bold{\alpha})}), the likelihood
+(\eqn{P(\bold{x}\mid\bold{\alpha})}) and the
+posterior probability (\eqn{P(\bold{\alpha}\mid\bold{x})})
+}

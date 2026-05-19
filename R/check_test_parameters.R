@@ -14,6 +14,7 @@ check_test_parameters <- function(
   action = c("error", "warning", "message", "quiet")
 ) {
   action <- match.arg(action)
+  error_call <- rlang::current_env()
 
   # We try and build a Q-matrix from the test
   built_qmatrix <- rlang::try_fetch(
@@ -21,17 +22,23 @@ check_test_parameters <- function(
 
     # Catch the column error
     invalid_column_count = function(cnd) {
-      new_msg <- paste("Failed to validate test parameters:", cnd$message)
-      saltr_emit(new_msg, level = action, parent = cnd, class = "check_fail_cols")
+      saltr_emit(
+        "Failed to validate test parameters",
+        level = action,
+        class = "check_fail_cols",
+        call = error_call
+      )
     },
 
+    # ,
     # Catch the item transformation error
     parameter_match_error = function(cnd) {
-      new_msg <- sprintf(
-        "Validation failed at item %d. The parameters are malformed.",
-        cnd$row_index
+      saltr_emit(
+        "Validation failed at item {.val {cnd$row_index}}.",
+        level = action,
+        class = "check_fail_row",
+        call = error_call
       )
-      saltr_emit(new_msg, level = action, parent = cnd, class = "check_fail_row")
     }
   )
 

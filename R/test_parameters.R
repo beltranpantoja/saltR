@@ -16,6 +16,8 @@ NULL
 #'
 #' @export
 as_test_parameters <- function(x) {
+  error_call <- rlang::caller_call()
+
   if (is.data.frame(x)) {
     is_num <- vapply(x, is.numeric, logical(1))
 
@@ -29,8 +31,30 @@ as_test_parameters <- function(x) {
     stop("Input must be a matrix or a numeric data.frame.")
   }
 
-  # We check is properly formed
-  check_test_parameters(x)
+  # We check is properly formed and if not we throw a warning.
+  rlang::try_fetch(
+    check_test_parameters(x),
+    check_fail_cols = function(cnd) {
+      saltr_emit(
+        paste(
+          "The test is malformed.",
+          cnd$message
+        ),
+        level = "warning",
+        call = error_call
+      )
+    },
+    check_fail_row = function(cnd) {
+      saltr_emit(
+        paste(
+          "Some items do not have the right number of parameters.",
+          cnd$message
+        ),
+        level = "warning",
+        call = error_call
+      )
+    }
+  )
 
   # 3. Assign the custom class
   class(x) <- c("test_parameters", "matrix")
@@ -42,6 +66,8 @@ as_test_parameters <- function(x) {
 #'
 #' @param test_parameters matrix to print
 #' @param digits number of rounding digits
+#' @param ignore_empty_cols Boolean. Should columns with no parameters be
+#'  printed?
 #' @param prefix prefix for the columns. By default, uses the Greek letter
 #'  lambda in interactive sessions.
 #'
@@ -50,6 +76,7 @@ as_test_parameters <- function(x) {
 #' @export
 print.test_parameters <- function(x,
                                   digits = 2,
+                                  ignore_empty_cols = FALSE,
                                   prefix = NULL,
                                   ...) {
   if (is.null(prefix)) {
@@ -57,6 +84,11 @@ print.test_parameters <- function(x,
   }
 
   params <- as.data.frame(as_test_parameters(x))
+
+  # If a column doesn't have parameters we don't print it.
+  if (ignore_empty_cols) {
+    params <- params[, colSums(!is.na(params)) > 0, drop = FALSE]
+  }
 
   params_print <- data.frame(
     rownames(params),
@@ -95,10 +127,10 @@ print.test_parameters <- function(x,
 #' tf <- tempfile(fileext = ".csv")
 #'
 #' ### Standard use
-#' write_test_parameters(simple_test, "some_test_parameters")
+#' write_test_parameters(simple_test, tf)
 #'
 #' ### This will get saved as "simple_test.csv"
-#' write_test_parameters(simple_test)
+#' # write_test_parameters(simple_test)
 #'
 write_test_parameters <- function(
   test_parameters,

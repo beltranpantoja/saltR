@@ -1,5 +1,14 @@
 #' Build profiles likelihood and posterior probabilities for a given response.
 #'
+#' @details
+#' This function returns the likelihood of a profile given a response:
+#'  \eqn{P(\bold{\alpha}\mid\bold{x})}.
+#'
+#' It returns the used prior (\eqn{P(\bold{\alpha})}), the likelihood
+#'  (\eqn{P(\bold{x}\mid\bold{\alpha})}) and the
+#'  posterior probability (\eqn{P(\bold{\alpha}\mid\bold{x})})
+#'
+#'
 #' @param test_parameters a Matrix containing the items and their parameters as
 #'  created by `build_test_parameters`. If the test is extracted from a model
 #'  using `get_test_parameters` it should be extracted using the parameter
@@ -17,16 +26,11 @@ build_profile_likelihood <- function(
   response,
   priors = NULL
 ) {
-  # Get the item labels
-  item_labels <-
-    rownames(test_parameters) %||% paste0("I", seq_len(nrow(test_parameters)))
-
-
   num_attributes <- log(ncol(test_parameters), 2)
 
   full_profiles <- create_patterns(
     num_vars = num_attributes,
-    column_labels = item_labels
+    column_labels = paste0("A", seq_len(num_attributes))
   )
 
   # We get the index of the response

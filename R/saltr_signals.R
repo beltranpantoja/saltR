@@ -1,34 +1,43 @@
-#' Custom Signal Utility
+#' Custom Signal Utility using native cli signaling
 #' @noRd
 saltr_emit <- function(
   msg,
-  level = c("message", "error", "warning", "quiet"),
+  level = c("error", "warning", "message", "quiet"),
   class = NULL,
-  parent = NULL,
   call = rlang::caller_env(),
+  .envir = parent.frame(),
   ...
 ) {
   level <- match.arg(level)
 
-  # If it's quiet we just skip it
-  if (level != "quiet") {
-    switch(level,
-      error = rlang::abort(
-        msg,
-        class = class, parent = parent, call = call, ...
-      ),
-      warning = rlang::warn(
-        msg,
-        class = class, parent = parent, call = call, ...
-      ),
-      message = rlang::inform(
-        msg,
-        class = class, parent = parent, call = call, ...
-      )
-    )
+  if (level == "quiet") {
+    return(invisible(NULL))
   }
-}
 
+  switch(level,
+    error = cli::cli_abort(
+      message = msg,
+      class = class,
+      call = call,
+      .envir = .envir,
+      ...
+    ),
+    warning = cli::cli_warn(
+      message = msg,
+      class = class,
+      call = call,
+      .envir = .envir,
+      ...
+    ),
+    message = cli::cli_inform(
+      message = msg,
+      class = class,
+      call = call,
+      .envir = .envir,
+      ...
+    )
+  )
+}
 # ===================================
 # Error utilities
 # ===================================
@@ -38,7 +47,8 @@ saltr_emit <- function(
 #'
 #' Utility function to check if an object has the class gdina.
 #'
-#' @param object object to check
+#' @param object Object to check
+#' @param action what to do if it's not of type gdina.
 #' @param ... arguments to be passed to `saltr_emit` if an error is to be
 #'  thrown.
 #'
@@ -48,14 +58,15 @@ saltr_emit <- function(
 #'
 is_gdina_object <- function(
   object,
+  action = c("error", "warning", "message", "quiet"),
   ...
 ) {
   action <- match.arg(action)
   is_gdina <- inherits(object, "gdina")
 
   msg <- "Object is not of type gdina."
-  if (!is_gdina && !action == "quiet") {
-    saltr_emit(msg, ...)
+  if (!is_gdina) {
+    saltr_emit(msg, level = action)
   }
 
   invisible(is_gdina)
