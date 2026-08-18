@@ -117,3 +117,49 @@ construct_parameters_labels <- function(
   # Return
   final_mat
 }
+
+
+#' Utility to label matrices
+#'
+#' @param mat Matrix to label
+#' @param col_prefix,row_prefix prefix to use to create default labels
+#' @param col_labels,row_labels vector with the row/column labels
+#'
+#' @returns The original matrix with labels
+#' @keywords internal
+#'
+label_matrix <- function(
+  mat,
+  col_prefix = "A",
+  row_prefix = "V",
+  col_labels = NULL,
+  row_labels = NULL
+) {
+  num_cols <- ncol(mat)
+  num_rows <- nrow(mat)
+
+  # If there are no col or row labels we create them with the prefix.
+  if (is.null(col_labels)) {
+    col_labels <- paste0(col_prefix, seq_len(num_cols))
+  }
+
+  if (is.null(row_labels)) {
+    row_labels <- paste0(row_prefix, seq_len(num_rows))
+  }
+
+  rlang::try_fetch(
+    {
+      colnames(mat) <- col_labels
+      rownames(mat) <- row_labels
+      mat
+    },
+    error = function(cnd) {
+      saltr_emit(
+        message = "Labels don't match matrix dimensions"
+      )
+    }
+  )
+
+  # Return
+  mat
+}

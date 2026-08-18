@@ -1,21 +1,14 @@
 #' Build profiles likelihood and posterior probabilities for a given response.
 #'
-#' @details
 #' This function returns the likelihood of a profile given a response:
-#'  \eqn{P(\bold{\alpha}\mid\bold{x})}.
-#'
-#' It returns the used prior (\eqn{P(\bold{\alpha})}), the likelihood
-#'  (\eqn{P(\bold{x}\mid\bold{\alpha})}) and the
-#'  posterior probability (\eqn{P(\bold{\alpha}\mid\bold{x})})
-#'
+#'  \eqn{P(\bold{\alpha_l}\mid\bold{x})}.
 #'
 #' @param test_parameters a Matrix containing the items and their parameters as
-#'  created by `build_test_parameters`. If the test is extracted from a model
-#'  using `get_test_parameters` it should be extracted using the parameter
-#'  `complete=TRUE`.
+#'  created by `build_test_parameters`.
 #' @param response numeric vector corresponding to the response pattern.
-#' @param priors profiles prior distribution. If NULL it will be assumed to be
-#'  uniformly distributed.
+#' @param profiles Vector or matrix with the profiles.
+#' @param profile_prior the priors of the passed profiles
+#' @param priors profiles prior distribution.
 #'
 #' @returns A matrix with the profiles, the priors, the likelihood and the
 #'  posterior
@@ -23,81 +16,60 @@
 #'
 build_profile_likelihood <- function(
   test_parameters,
+  profiles,
   response,
-  priors = NULL
+  profile_priors,
+  priors,
+  complete = TRUE
 ) {
-  num_attributes <- log(ncol(test_parameters), 2)
+  if (sum(priors) != 1) {
+    # TODO: fix the way this error is being thrown.
+    stop("priors should add to 1.")
+  }
 
-  full_profiles <- create_patterns(
-    num_vars = num_attributes,
-    column_labels = paste0("A", seq_len(num_attributes))
-  )
+  # If profiles is a single vector, convert to single row matrix
+  if (is.vector(profiles)) {
+    profiles <- t(profiles)
+  }
 
-  # We get the index of the response
-  idx <- .get_matching_rows_index(
-    create_patterns(num_vars = nrow(test_parameters)),
-    response
-  )
+  # TODO: change the arguments so the prior is taken from the respective
+  # profile position.
 
-  # Iterate over the profiles to get the likelihood P(x|a)
-  profile_likelihood <- apply(
-    full_profiles,
-    simplify = TRUE,
+  # This makes the loop once per profile
+  response_likelihoods <- apply(
+    profiles,
     MARGIN = 1,
     FUN = function(profile) {
-      response_likelihood <- build_response_likelihood(test_parameters, profile)
-
-      # We return the likelihood of the relevant response
-      response_likelihood[idx, "response_likelihood"]
-    }
-  )
-
-
-  # Priors: P(a)
-  # Default priors: uniform distribution
-  if (is.null(priors)) {
-    priors <- rep(
-      1 / nrow(full_profiles),
-      nrow(full_profiles)
-    )
-  }
-
-  # Validation
-  if (!is.numeric(priors)) {
-    stop("priors must be a numeric vector.")
-  }
-
-  if (length(priors) != nrow(full_profiles)) {
-    stop(
-      sprintf(
-        "priors should have length %d.",
-        nrow(full_profiles)
+      build_response_likelihood(
+        test_parameters = test_parameters,
+        responses = response,
+        profiles = profile,
+        complete = FALSE
       )
-    )
-  }
-
-  if (any(priors < 0)) {
-    stop("priors cannot contain negative values.")
-  }
-
-  if (abs(sum(priors) - 1) > 1e-10) {
-    stop("priors should sum to 1.")
-  }
-
-  # P(x | a) P(a)
-  posterior_numerator <- profile_likelihood * priors
-
-  # P(x)
-  response_prob <- sum(posterior_numerator)
-
-  # P(a | x)
-  posterior <- posterior_numerator / response_prob
-
-  # Output
-  cbind(
-    full_profiles,
-    prior = priors,
-    likelihood = profile_likelihood,
-    posterior = posterior
+    },
+    simplify = TRUE
   )
+
+
+  marginal_response_likelihood <- build_marginal_response_likelihood(
+    test_parameters,
+    response,
+    priors,
+    complete = FALSE
+  ) |> as.vector()
+
+  profile_likelihood <-
+    (response_likelihoods * profile_priors) / marginal_response_likelihood
+
+
+  # Return
+  result <- as.matrix(profile_likelihood)
+
+  # We add the responses if needed.
+  if (complete == TRUE) {
+    result <- cbind(profiles, result)
+  }
+
+  # Returning result
+  result
 }
