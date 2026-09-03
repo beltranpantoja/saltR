@@ -6,23 +6,24 @@
 \usage{
 build_profile_likelihood(
   test_parameters,
-  profile,
+  profiles,
   response,
-  profile_prior,
-  priors
+  profile_priors,
+  priors,
+  complete = TRUE
 )
 }
 \arguments{
 \item{test_parameters}{a Matrix containing the items and their parameters as
 created by \code{build_test_parameters}.}
 
-\item{response}{numeric vector corresponding to the response pattern.}
+\item{profiles}{Vector or matrix with the profiles.}
 
-\item{profile_prior}{the prior of the profile}
+\item{response}{numeric vector corresponding to the response pattern.}
 
 \item{priors}{profiles prior distribution.}
 
-\item{profiles}{Vector or matrix with the profiles.}
+\item{profile_prior}{the priors of the passed profiles}
 }
 \value{
 A matrix with the profiles, the priors, the likelihood and the

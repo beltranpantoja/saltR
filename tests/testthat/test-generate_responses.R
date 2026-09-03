@@ -1,4 +1,4 @@
-test_that("Check that probability of response generation works", {
+test_that("Check that probability of response generation works for DCMs", {
   qmat <- diag(3)
   examinees <- lower.tri(diag(3), TRUE) * 1
   test <- build_test_parameters(qmat, -2, 2)
@@ -12,6 +12,10 @@ test_that("Check that probability of response generation works", {
 
   expect_equal(responses_probs, expected_probs)
 })
+
+test_that("Check response generation works for IRT and MIRT", {})
+
+test_that("Check response generation works for UDF", {})
 
 test_that("Check that response generation works", {
   qmat <- diag(3)
